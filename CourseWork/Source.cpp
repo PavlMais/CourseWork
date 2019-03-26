@@ -3,6 +3,7 @@
 #include <fstream>
 #include <Windows.h>
 #include <conio.h>
+#include <iomanip>   
 
 using namespace std;
 
@@ -23,7 +24,6 @@ struct Product {
 	string description;
 	int id_company;
 };
-
 struct Company {
 	int id;
 	string name;
@@ -45,16 +45,17 @@ private:
 	Data data;
 	Product* products;
 
-	int sizeX = 23, sizeY = 50;
+	int sizeX = 23, sizeY = 80;
 	int menuSizeY = sizeY / 4;
 
 
 	int mainSizeY = sizeY - (sizeY / 4);
-	static const int menuCount = 4;
+
+	static const unsigned short int menuCount = 5;
 
 	int offsetView = 0;
 
-	string menus[menuCount] = { "View", "Add", "Search", "Setting"};
+	string menus[menuCount] = { "View", "Add", "Search", "Setting", "LOL"};
 	string bMenu[100];
 
 	string* bild_menu() {
@@ -122,43 +123,85 @@ private:
 	}
 
 	string info_item(Product product) {
+		
+		const unsigned short int widthID     = mainSizeY * 5 / 100;
+		const unsigned short int widthTitle  = mainSizeY * 30 / 100;
+		const unsigned short int widthPrice  = mainSizeY * 20 / 100;
+		const unsigned short int widthRating = mainSizeY * 25 / 100;
+
+		string id = to_string(product.id);
+		string title = product.name;
+		string price = to_string(product.price).substr(0, to_string(product.price).find(".") + 3);
+		string rating = to_string(product.rating).substr(0, to_string(product.rating).find(".") + 3);
+		
+
+
+		if (id.length() > widthID)  id = id.substr(0, widthID);
+		else  for (int i = id.length(); i < widthID; i++)id += " ";
+
+		
+		if (title.length() > widthTitle)  title = title.substr(0, widthTitle - 3) + "...";
+		else  for (int i = title.length(); i < widthTitle; i++) title += " ";
+
+
+
+		if (price.length() > widthPrice)  price = price.substr(0, widthPrice);
+		else  for (int i = price.length(); i < widthPrice; i++) price += " ";
+
+
+
+
+
+		if (product.name.length() > widthTitle)  product.name = product.name.substr(0, widthTitle);
+		else  for (int i = product.name.length(); i < widthTitle; i++) product.name += " ";
+		if (product.name.length() > widthTitle)  product.name = product.name.substr(0, widthTitle);
+		else  for (int i = product.name.length(); i < widthTitle; i++) product.name += " ";
+
+
+		
+		
 		string info = "";
-		info += " " + to_string(product.id) + " " + product.name + " " + to_string(product.price) +  " " + to_string(product.rating);
+		info +=  " " + id + " " + title + " " + price +  " " + rating + "\t\t    ";
 		return info;
 	}
 
 	string* bild_view() {
 		string* view = new string[40]; //data.productsSize * 3
 		
-		view[0] = " ID Name Price Rating";
-		if (viewSelect < 0) viewSelect = 0;
+		view[0] = " ID   Name               Price        Rating";
+
+		if (viewSelect < 0) {
+			cout << "\a";  viewSelect = 0;
+		}
+
+
 		if (viewSelect == (sizeX / 2 - 1) + offsetView) offsetView++;
 		else if (viewSelect == offsetView) offsetView--;
 
 		
 
-		for (int i = 1; i < 22; i++)
+		for (int i = 1; i < sizeX; i++)
 		{ 
 			if (i % 2 == 0) {
 				
-				if (i - 2 == viewSelect * 2)
+				if (i - 2 == viewSelect * 2 && !menuActive)
 					view[i] = char(179) + info_item(data.products[i / 2 +offsetView]) + char(179);
 				else
 					view[i] = " " + info_item(data.products[i / 2 + offsetView]);
 
 			}
 			else {
-				if (i - 1 == viewSelect * 2) {
+				if (i - 1 == viewSelect * 2 && !menuActive){
 
 					view[i] += char(218);
 					for (int j = 0; j < mainSizeY; j++) view[i] += char(196);
 					view[i] += char(191);
 
-				} else if (i - 3 == viewSelect * 2) {
+				} else if (i - 3 == viewSelect * 2 && !menuActive) {
 
 					view[i] += char(192);
 					for (int j = 0; j < mainSizeY; j++) view[i] += char(196);
-					view[i] += char(190);
+					view[i] += char(217);
 				}
 
 			}
@@ -171,7 +214,7 @@ private:
 public:
 	bool menuActive = false;
 	int menuSelect = 0; 
-	int viewSelect = 0; // start from one not zero
+	int viewSelect = 0;
 
 
 	Window(Data adata) {
@@ -184,8 +227,7 @@ public:
 		string *bMenu = bild_menu();
 		string *view = bild_view();
 
-		for (int i = 0; i < 23; i++)
-		{
+		for (int i = 0; i < 23; i++) {
 			cout << bMenu[i]  << view[i]<< endl;;
 		}
 
@@ -195,7 +237,6 @@ public:
 
 class View {
 public:
-
 	User active_user;
 
 	bool login(User *users, const int users_count) {
@@ -267,22 +308,21 @@ public:
 
 		data.users = new User[data.usersSize];
 
-		for (int i = 0; i < data.usersSize; i++)
-		{
+		for (int i = 0; i < data.usersSize; i++){
 			getline(file, buffer);
-			cout << "GL: " << endl;
 			data.users[i] = parse_user(buffer);
-		
 		}
 
 
 		getline(file, buffer);
 		data.productsSize = stoi(buffer);
+
 		data.products = new Product[data.productsSize];
-		cout << data.productsSize << endl;
+
+		//cout << data.productsSize << endl;
 		for (int i = 0; getline(file, buffer); i++)
 		{
-			cout <<"BUffer: "<<i <<" "<< buffer << "\n\n";
+			//cout <<"BUffer: "<<i <<" "<< buffer << "\n\n";
 			data.products[i] = parse_product(buffer);
 		}
 
@@ -308,8 +348,6 @@ private:
 		return user;
 	}
 
-
-
 	Product parse_product(string data) {
 		int indx1 = data.find("[i]") + 3;
 		int indx2 = data.find("[t]") + 3;
@@ -334,9 +372,6 @@ private:
 		return product;
 	}
 
-
-
-
 };
 
 int main() {
@@ -345,7 +380,7 @@ int main() {
 
 	db.connect();
 	
-	//if (!view.login(db.users, db.users_count)) return 0;
+	if (!view.login(db.data.users, db.data.usersSize)) return 0;
 	
 
 	Window win(db.data);
