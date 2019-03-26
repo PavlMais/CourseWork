@@ -2,6 +2,8 @@
 #include <string>
 #include <fstream>
 #include <Windows.h>
+#include <conio.h>
+
 using namespace std;
 
 struct User {
@@ -27,44 +29,48 @@ struct Company {
 	string name;
 
 };
-// ____________________________ NAME __________________________________
-// |  View      | id   name    price       info         itd		  |
-// |-------------|  1  IPhone  100000   Good or bat      info		  |
-// |   Search    |  2  IPhone  1000     Good or bat      info		  |
-// |-------------|  2  IPhone  1000     Good or bat      info		  |
-// |  Setting    |  2  IPhone  1000     Good or bat      info		  |
-// |             |  2  IPhone  1000     Good or bat      info		  |
-// |             |  2  IPhone  1000     Good or bat      info		  |
+struct Data {
+	Product* products;
+	int productsSize;
+	User* users;
+	int usersSize;
 
+};
 
 
 
 
 class Window {
 private:
-	int sizeX = 23, sizeY = 50;
-	int doxSize = sizeY / 4;
-	int MainSize = sizeY - (sizeY / 4);
-	static const int menu_size = 4;
-	string menus[menu_size] = { "View", "Add", "Search", "Setting"};
-	int menuSelect = 1;
-	string bMenu[100];
-	
+	Data data;
+	Product* products;
 
+	int sizeX = 23, sizeY = 50;
+	int menuSizeY = sizeY / 4;
+
+
+	int mainSizeY = sizeY - (sizeY / 4);
+	static const int menuCount = 4;
+
+	int offsetView = 0;
+
+	string menus[menuCount] = { "View", "Add", "Search", "Setting"};
+	string bMenu[100];
 
 	string* bild_menu() {
+
 		int hline, vline, anglUL, anglUR, anglDL, anglDR, vrline, qnglURS, qnglDRS;
 		hline = 196;
 		vline = 179;
 		anglUL = 218;
 		anglDL = 192;
 		bMenu[0] = "";
-		for (int _ = 0; _ < doxSize + 2; _++) bMenu[0] += " ";
+		for (int _ = 0; _ < menuSizeY + 2; _++) bMenu[0] += " ";
 		bMenu[0] += char(vline);
 
-		for (int i = 1; i < menu_size * 3 + 1; i += 3){ 
+		for (int i = 1; i < menuCount * 3 + 1; i += 3){
 			
-			bMenu[i] = "\n";
+			bMenu[i] = "";
 			if (i / 3 == menuSelect) {
 				vrline = 32;
 				anglUR = 196;
@@ -80,33 +86,34 @@ private:
 			}
 
 			bMenu[i] += char(anglUL);
-			for (int s = 0; s < doxSize; s++) bMenu[i] += char(hline);
+			for (int s = 0; s < menuSizeY; s++) bMenu[i] += char(hline);
 			bMenu[i] += char(anglUR);
 			bMenu[i] += char(qnglURS);
-			bMenu[i] += "\n";
 			
-
-			bMenu[i+1] += char(vline);
-			int strr = doxSize - menus[i / 3].length();
+			
+			bMenu[i + 1] = "";
+			bMenu[i + 1] += char(vline);
+			int strr = menuSizeY - menus[i / 3].length();
 			for (int s = 0; s < strr + 1; s++){
 				if (s == strr / 2) bMenu[i+1] += menus[i/3];
 				else bMenu[i+1] += " ";
 			}
 			bMenu[i+1] += char(vrline);
 			bMenu[i + 1] += char(vrline);
-			bMenu[i+1] += "\n";
+			
+			bMenu[i + 2] = "";
 
 			bMenu[i+2] += char(anglDL);
-			for (int s = 0; s < doxSize; s++) bMenu[i+2] += char(hline);
+			for (int s = 0; s < menuSizeY; s++) bMenu[i+2] += char(hline);
 			bMenu[i+2] += char(anglDR);
 			bMenu[i + 2] += char(qnglDRS);
 			
 		}
 
 		
-		for (int i = menu_size * 3 + 1; i < sizeX; i++){
-			bMenu[i] = "\n";
-			for (int _ = 0; _ < doxSize + 2; _++) bMenu[i] += " ";
+		for (int i = menuCount * 3 + 1; i < sizeX; i++){
+			bMenu[i] = "";
+			for (int _ = 0; _ < menuSizeY + 2; _++) bMenu[i] += " ";
 			bMenu[i] += char(vline);
 		}
 
@@ -114,27 +121,72 @@ private:
 		return bMenu;
 	}
 
-	string* bild_view() {
-
-
-
-
+	string info_item(Product product) {
+		string info = "";
+		info += " " + to_string(product.id) + " " + product.name + " " + to_string(product.price) +  " " + to_string(product.rating);
+		return info;
 	}
 
-	
+	string* bild_view() {
+		string* view = new string[40]; //data.productsSize * 3
+		
+		view[0] = " ID Name Price Rating";
+		if (viewSelect < 0) viewSelect = 0;
+		if (viewSelect == (sizeX / 2 - 1) + offsetView) offsetView++;
+		else if (viewSelect == offsetView) offsetView--;
+
+		
+
+		for (int i = 1; i < 22; i++)
+		{ 
+			if (i % 2 == 0) {
+				
+				if (i - 2 == viewSelect * 2)
+					view[i] = char(179) + info_item(data.products[i / 2 +offsetView]) + char(179);
+				else
+					view[i] = " " + info_item(data.products[i / 2 + offsetView]);
+
+			}
+			else {
+				if (i - 1 == viewSelect * 2) {
+
+					view[i] += char(218);
+					for (int j = 0; j < mainSizeY; j++) view[i] += char(196);
+					view[i] += char(191);
+
+				} else if (i - 3 == viewSelect * 2) {
+
+					view[i] += char(192);
+					for (int j = 0; j < mainSizeY; j++) view[i] += char(196);
+					view[i] += char(190);
+				}
+
+			}
+		}
+		return view;
+	}
 
 
 
 public:
-	void render(Product* products) {
+	bool menuActive = false;
+	int menuSelect = 0; 
+	int viewSelect = 0; // start from one not zero
+
+
+	Window(Data adata) {
+		data = adata;
+	}
+
+	void render() {
 		system("cls");
 
 		string *bMenu = bild_menu();
+		string *view = bild_view();
 
-
-		for (int i = 0; i < 40; i++)
+		for (int i = 0; i < 23; i++)
 		{
-			cout << bMenu[i];
+			cout << bMenu[i]  << view[i]<< endl;;
 		}
 
 	}
@@ -195,11 +247,7 @@ public:
 class DataBase {
 
 public:
-
-	Product *products;
-	int products_count;
-	User *users;
-	int users_count;
+	Data data;
 
 	void connect() {
 		const string PATH_DB = "text.txt";
@@ -215,27 +263,27 @@ public:
 		}
 		string buffer;
 		getline(file, buffer);
-		users_count = stoi(buffer);
+		data.usersSize = stoi(buffer);
 
-		users = new User[users_count];
+		data.users = new User[data.usersSize];
 
-		for (int i = 0; i < users_count; i++)
+		for (int i = 0; i < data.usersSize; i++)
 		{
 			getline(file, buffer);
 			cout << "GL: " << endl;
-			users[i] = parse_user(buffer);
+			data.users[i] = parse_user(buffer);
 		
 		}
 
 
 		getline(file, buffer);
-		products_count = stoi(buffer);
-		products = new Product[products_count];
-
+		data.productsSize = stoi(buffer);
+		data.products = new Product[data.productsSize];
+		cout << data.productsSize << endl;
 		for (int i = 0; getline(file, buffer); i++)
 		{
-			cout <<"BUffer: " << buffer << "\n\n";
-			products[i] = parse_product(buffer);
+			cout <<"BUffer: "<<i <<" "<< buffer << "\n\n";
+			data.products[i] = parse_product(buffer);
 		}
 
 		file.close();
@@ -288,7 +336,9 @@ private:
 
 
 
+
 };
+
 int main() {
 	View view;
 	DataBase db;
@@ -298,23 +348,51 @@ int main() {
 	//if (!view.login(db.users, db.users_count)) return 0;
 	
 
-	Window win;
+	Window win(db.data);
 
-	win.render(db.products);
+	int press;
+	while (true)
+	{
+		 
 
-	cout << "\n\n";
+		win.render();
+		press = _getch();
+		if (press == 224) { 
+			switch (_getch())
+			{
+			case 72: // UP
+				if (win.menuActive) win.menuSelect--;
+				else win.viewSelect--;
+
+				break;
+
+			case 77: // LEFT
+				win.menuActive = !win.menuActive;
+				break;
+
+			case 80: // 
+				if (win.menuActive) win.menuSelect++;
+				else win.viewSelect++;
+
+				break;
+
+			case 75: // RIGHT
+				win.menuActive = !win.menuActive;
+				break;
+
+
+
+			default:
+				break;
+			}
+		}
+		
+	}
+
+
+	cout << "\n";
 	system("pause");
 
 	return 0;
 }
 
-
-
-
-
-// ###########
-// #items
-// #items
-// #items
-// #
-// ############
