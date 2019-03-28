@@ -1,7 +1,7 @@
 2
 pavlo[n]password[p]0[g]
 root[n]root[p]0[g]
-90
+10
 1[i]type[t]one[n]1343.55[p]0[s]7[l]12[r]fvfvgg[d]1[c]
 2[i]type[t]two[n]14323.44[p]0[s]7[l]12[r]fvfvgg[d]1[c]
 3[i]type[t]three[n]12433[p]0[s]7[l]12[r]fvfvgg[d]1[c]
@@ -12,8 +12,3 @@ root[n]root[p]0[g]
 8[i]type[t]nine[n]1443[p]0[s]7[l]12[r]fvfvgg[d]1[c]
 9[i]type[t]eleven[n]1233[p]0[s]7[l]12[r]fvfvgg[d]1[c]
 10[i]type[t]ten[n]12423[p]0[s]7[l]12[r]fvfvgg[d]1[c]
-11[i]type[t]name[n]123[p]0[s]7[l]12[r]fvfvgg[d]1[c]
-12[i]type[t]name[n]123[p]0[s]7[l]12[r]fvfvgg[d]1[c]
-13[i]type[t]name[n]123[p]0[s]7[l]12[r]fvfvgg[d]1[c]
-14[i]type[t]name[n]123[p]0[s]7[l]12[r]fvfvgg[d]1[c]
-15[i]type[t]name[n]123[p]0[s]7[l]12[r]fvfvgg[d]1[c]

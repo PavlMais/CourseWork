@@ -45,7 +45,7 @@ private:
 	Data data;
 	Product* products;
 
-	int sizeX = 23, sizeY = 80;
+	int sizeX = 25, sizeY = 80;
 	int menuSizeY = sizeY / 4;
 
 
@@ -55,7 +55,7 @@ private:
 
 	int offsetView = 0;
 
-	string menus[menuCount] = { "View", "Add", "Search", "Setting", "LOL"};
+	string menus[menuCount] = { "View", "Add", "Search", "Setting", "Quit"};
 	string bMenu[100];
 
 	string* bild_menu() {
@@ -140,7 +140,7 @@ private:
 		else  for (int i = id.length(); i < widthID; i++)id += " ";
 
 		
-		if (title.length() > widthTitle)  title = title.substr(0, widthTitle - 3) + "...";
+		if (title.length() > widthTitle)  title = title.substr(0, widthTitle - 2) + "..";
 		else  for (int i = title.length(); i < widthTitle; i++) title += " ";
 
 
@@ -166,46 +166,42 @@ private:
 	}
 
 	string* bild_view() {
-		string* view = new string[40]; //data.productsSize * 3
-		
+		string* view = new string[data.productsSize * 2]; //
 		view[0] = " ID   Name               Price        Rating";
 
-		if (viewSelect < 0) {
+		/*if (viewSelect < 0) {
 			cout << "\a";  viewSelect = 0;
-		}
-
-
-		if (viewSelect == (sizeX / 2 - 1) + offsetView) offsetView++;
-		else if (viewSelect == offsetView) offsetView--;
-
+		} else if (viewSelect == data.productsSize - 2) {
+			cout << "\a";  viewSelect = data.productsSize - 1;
+		}*/
 		
 
-		for (int i = 1; i < sizeX; i++)
-		{ 
-			if (i % 2 == 0) {
-				
-				if (i - 2 == viewSelect * 2 && !menuActive)
-					view[i] = char(179) + info_item(data.products[i / 2 +offsetView]) + char(179);
-				else
-					view[i] = " " + info_item(data.products[i / 2 + offsetView]);
+		//if (viewSelect >= (sizeX / 2) + offsetView - 1 && viewSelect <= data.productsSize) offsetView++;
+		//else if (viewSelect <= offsetView && offsetView != 0) offsetView--;
 
-			}
-			else {
-				if (i - 1 == viewSelect * 2 && !menuActive){
 
-					view[i] += char(218);
-					for (int j = 0; j < mainSizeY; j++) view[i] += char(196);
-					view[i] += char(191);
+		for (int i = 1; i < sizeX && i < 3; i+=2){
+			if (i / 2 == viewSelect - offsetView && !menuActive) {
 
-				} else if (i - 3 == viewSelect * 2 && !menuActive) {
+				view[i] += char(218);
+				for (int j = 0; j < mainSizeY; j++) view[i] += char(196);
+				view[i] += char(191);
 
+				view[i + 1] = char(179) + info_item(data.products[(i / 2) + offsetView]) + char(179);
+
+			} else {
+
+				if ((i - 2) / 2 == viewSelect - offsetView && !menuActive) {
 					view[i] += char(192);
 					for (int j = 0; j < mainSizeY; j++) view[i] += char(196);
 					view[i] += char(217);
-				}
+				} else view[i] = " ";
 
+				view[i + 1] = " " + info_item(data.products[i / 2 + offsetView]);
 			}
 		}
+		cout << viewSelect << " " << data.	productsSize << " " << offsetView << " " << sizeX / 2 << endl;
+
 		return view;
 	}
 
@@ -222,20 +218,21 @@ public:
 	}
 
 	void render() {
-		system("cls");
 
+		system("cls");
 		string *bMenu = bild_menu();
 		string *view = bild_view();
 
+		string buffer;
 		for (int i = 0; i < 23; i++) {
-			cout << bMenu[i]  << view[i]<< endl;;
+			buffer += bMenu[i] + view[i] + "\n";
 		}
-
+		cout << buffer;
 	}
 };
 
 
-class View {
+class Login {
 public:
 	User active_user;
 
@@ -371,16 +368,15 @@ private:
 		product.id_company = stoi(data.substr(indx8, indx9 - indx8 - 3));
 		return product;
 	}
-
 };
 
 int main() {
-	View view;
+	Login view;
 	DataBase db;
 
 	db.connect();
 	
-	if (!view.login(db.data.users, db.data.usersSize)) return 0;
+	//if (!view.login(db.data.users, db.data.usersSize)) return 0;
 	
 
 	Window win(db.data);
@@ -389,9 +385,14 @@ int main() {
 	while (true)
 	{
 		 
-
 		win.render();
 		press = _getch();
+
+
+		if (win.menuSelect == 4 && press == 13) {
+			return 0;// TODO: add menu confirm quit
+		}
+
 		if (press == 224) { 
 			switch (_getch())
 			{
