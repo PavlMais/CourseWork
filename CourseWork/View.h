@@ -13,7 +13,10 @@ public:
 	int itemsSelect = 0;
 	short int fieldSelect = 0;
 
-
+	
+	cursorUp();
+	cursorDown();
+	
 	void render();
 
 	bool login();
