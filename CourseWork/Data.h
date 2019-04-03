@@ -47,5 +47,25 @@ struct Data {
 	User* users;
 	int usersSize;
 	User userActive;
+	
+	
+	
+	string toString(){
+		string str = "";
+        str += std::to_string(usersSize) + "\n";
+        
+        for(int a = 0; a < usersSize; a++){
+            str += users[a].toString() + "\n";
+        }
+        
+        str += std::to_string(productsSize) + "\n";
+        
+        for(int i = 0; i < productsSize; i++){
+            str += products[i].toString() + "\n";   
+        }
+        return str;
+  
+		
+	}
 
 };
