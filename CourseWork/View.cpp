@@ -9,6 +9,21 @@ View::View(Data* pdata)
 	data = pdata;
 }
 
+void cursorUp(){
+	switch(activeMenu){
+		case Menu::LISTITEMS: itemsSelect--;
+		case Menu::DETAILITEM: fieldSelect--;
+	}
+
+}
+void cursorDown(){
+	switch(activeMenu){
+		case Menu::LISTITEMS: itemsSelect++;
+		case Menu::DETAILITEM: fieldSelect++;
+	}
+}
+
+
 void View::render() {
 
 
@@ -16,7 +31,7 @@ void View::render() {
 	string *bMenu = bildMenu();
 
 	string *view;
-	if (itemOpen) {
+	if (menuActive == Menu::DETAILITEM) {
 		view = bildOpenItem();
 	}
 	else {
