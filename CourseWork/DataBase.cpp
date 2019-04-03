@@ -12,6 +12,15 @@ DataBase::~DataBase()
 {
 }
 
+void save(Data* data){
+	string strData = data.toString();
+	
+	std::ofstream file(PATH_DB);
+	file << strData;
+	file.close();
+
+}
+
 Data* DataBase::getData(){
 	std::ifstream file(PATH_DB);
 
