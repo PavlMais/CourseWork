@@ -9,9 +9,7 @@ public:
 	
 	Menu menuActive = Menu::LISTITEMS;
 	
-	short int menuSelect = 0;
-	int itemsSelect = 0;
-	short int fieldSelect = 0;
+	
 
 	
 	cursorUp();
@@ -26,6 +24,9 @@ public:
 	
 private:
 	
+	short int menuSelect = 0;
+	int itemsSelect = 0;
+	short int fieldSelect = 0;
 	User activeUser;
 	unsigned int winSizeX = 20;
 	unsigned int winSizeY = 61;
