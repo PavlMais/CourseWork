@@ -5,11 +5,13 @@ class View
 {
 public:
 	View(Data* data);
-
-	bool itemOpen = false;
-	string menuActive = "listItems";
+	enum Menu {LISTITEMS, DETAILITEM, EDITITEM};
+	
+	Menu menuActive = Menu::LISTITEMS;
+	
 	short int menuSelect = 0;
 	int itemsSelect = 0;
+	short int fieldSelect = 0;
 
 
 	void render();
@@ -17,9 +19,10 @@ public:
 	bool login();
 
 		
-
-private:
 	Data* data;
+	
+private:
+	
 	User activeUser;
 	unsigned int winSizeX = 20;
 	unsigned int winSizeY = 61;
