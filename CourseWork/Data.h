@@ -24,6 +24,18 @@ struct Product {
 	string description;
 	int id_company;
     
+	string getValue(string key) {
+		if (key == "Title") return name;
+		if (key == "Price") return std::to_string(price);
+		if (key == "Rating") return std::to_string(rating);
+	}
+
+	void setValue(int key, string val) {
+		if (key == 0) name = val;
+		if (key == 1) price = stoi(val);
+		if (key == 2) rating = stoi(val);
+	}
+
     string toString(){
         string str = std::to_string(id) + "[id]";
         str += type + "[t]" + name + "[n]";
@@ -32,7 +44,7 @@ struct Product {
         str += std::to_string(left_item) + "[l]";
         str += std::to_string(rating) + "[r]";
         str += description + "[d]";
-        std += std::to_string(id_company) + "[c]";
+        str += std::to_string(id_company) + "[c]";
         return str;
     }
 };

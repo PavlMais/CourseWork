@@ -7,26 +7,30 @@ public:
 	View(Data* data);
 	enum Menu {LISTITEMS, DETAILITEM, EDITITEM};
 	
-	Menu menuActive = Menu::LISTITEMS;
-	
-	
+	Menu viewActive = Menu::LISTITEMS;
+	bool menuActive = false;
+
+	string editedField = "";
+
+	bool editedFieldOnluNumbers = false;
 
 	
-	cursorUp();
-	cursorDown();
+	void cursorUp();
+	void cursorDown();
 	
 	void render();
 
 	bool login();
+	
 
 		
 	Data* data;
 	
+	int itemsSelect = 0;
+	short int fieldSelect = 0;
 private:
 	
 	short int menuSelect = 0;
-	int itemsSelect = 0;
-	short int fieldSelect = 0;
 	User activeUser;
 	unsigned int winSizeX = 20;
 	unsigned int winSizeY = 61;
@@ -40,7 +44,7 @@ private:
 
 	string* bildMenu();
 	string* bildListItems();
-	string* bildOpenItem();
+	string* bildDetailItem();
 	string bildItem(Product product);
 };
 

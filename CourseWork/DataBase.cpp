@@ -12,8 +12,8 @@ DataBase::~DataBase()
 {
 }
 
-void save(Data* data){
-	string strData = data.toString();
+void DataBase::save(Data* data){
+	string strData = data->toString();
 	
 	std::ofstream file(PATH_DB);
 	file << strData;

@@ -8,7 +8,7 @@ public:
 
 	Data* getData();
 
-	void save(Data);
+	void save(Data*);
 
 
 

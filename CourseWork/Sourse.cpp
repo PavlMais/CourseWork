@@ -23,10 +23,31 @@ int main() {
 		key = _getch();
 		
 
+		if (view.viewActive == view.Menu::EDITITEM) {
+			if (key == 8) {
+				view.editedField = view.editedField.substr(0, view.editedField.size() - 1);
+			}
+			else if (key == 13) {
+				view.data->products[view.itemsSelect].setValue(view.fieldSelect, view.editedField);
+				view.viewActive = view.Menu::DETAILITEM;
+			}
+			else {
+
+				view.editedField += char(key);
+			}
+
+			continue;
+		}
+
 
 		if (key == 13) {
-			if (view.menuActive == "listItems") {
-				view.itemOpen = true;
+			if (view.viewActive == view.Menu::LISTITEMS) {
+				view.viewActive = view.Menu::DETAILITEM;
+			}
+			else if (view.viewActive == view.Menu::DETAILITEM) {
+				view.viewActive = view.Menu::EDITITEM;
+				view.editedField = "";
+
 			}
 		}
 
@@ -34,24 +55,20 @@ int main() {
 		if (key == 224) {
 			switch (_getch()){
 			case 72: // UP
-				if (view.menuActive == "menu") view.menuSelect--;
-				else view.itemsSelect--;
-
+				view.cursorUp();
 				break;
 
 			case 77: // LEFT
-				//view.menuActive = !view.menuActive;
+				view.menuActive = !view.menuActive;
 				break;
 
 			case 80: // 
-				if (view.menuActive == "menu") view.menuSelect++;
-				else view.itemsSelect++;
-			
+				view.cursorDown();
 
 				break;
 
 			case 75: // RIGHT
-				//view.menuActive = !view.menuActive;
+				view.menuActive = !view.menuActive;
 				break;
 
 

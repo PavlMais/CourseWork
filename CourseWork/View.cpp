@@ -9,32 +9,36 @@ View::View(Data* pdata)
 	data = pdata;
 }
 
-void cursorUp(){
-	switch(activeMenu){
-		case Menu::LISTITEMS: itemsSelect--;
-		case Menu::DETAILITEM: fieldSelect--;
+void View::cursorUp(){
+	if (menuActive)menuSelect--; 
+	else
+	switch(viewActive){
+	case Menu::LISTITEMS: itemsSelect--; break;
+	case Menu::DETAILITEM: fieldSelect--; break;
 	}
 
 }
-void cursorDown(){
-	switch(activeMenu){
-		case Menu::LISTITEMS: itemsSelect++;
-		case Menu::DETAILITEM: fieldSelect++;
+void View::cursorDown(){
+	if (menuActive)menuSelect++;
+	else
+	switch(viewActive){
+		case Menu::LISTITEMS: itemsSelect++; break;
+		case Menu::DETAILITEM: fieldSelect++; break;
 	}
 }
 
 
-void View::render() {
+void View::View::render() {
 
 
 	system("cls");
 	string *bMenu = bildMenu();
 
 	string *view;
-	if (menuActive == Menu::DETAILITEM) {
-		view = bildOpenItem();
+	if (viewActive == Menu::DETAILITEM || viewActive == Menu::EDITITEM) {
+		view = bildDetailItem();
 	}
-	else {
+	else  {
 		view = bildListItems();
 	}
 
@@ -50,24 +54,39 @@ void View::render() {
 
 
 
-string* View::bildOpenItem() {
+string* View::bildDetailItem() {
 
 	string *view = new string[winSizeX];
-	
+	const unsigned short int FIELDSSIZE = 3;
+	string FIELDS[FIELDSSIZE] = { "Title", "Price", "Rating" };
+
 	for (int i = 0; i < viewSizeY; i++)
 	{
 		if (i == viewSizeY / 2) view[0] += "View";
 		else view[0] += " ";
 	}
 
-	view[2] = "Title: " + data->products[itemsSelect].name;
 
-	
+	for (int i = 0; i < FIELDSSIZE ; i++)
+	{	
+
+		if (fieldSelect == i && viewActive == Menu::EDITITEM) {
+			
+			view[i + 1] = "\t> " + FIELDS[i] +": "+ editedField;
+
+		}
+
+		else if (fieldSelect == i) {
+
+			view[i + 1] = "\t> " + FIELDS[i] + ": " + data->products[itemsSelect].getValue(FIELDS[i]);
+		}
+		else {
+			view[i + 1] = "\t "+FIELDS[i] + ": " + data->products[itemsSelect].getValue(FIELDS[i]);
+
+		}
 
 
-
-
-
+	}
 
 
 	return view;
