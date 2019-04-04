@@ -28,12 +28,36 @@ struct Product {
 		if (key == "Title") return name;
 		if (key == "Price") return std::to_string(price);
 		if (key == "Rating") return std::to_string(rating);
+		if (key == "Left item") return std::to_string(rating);
+		if (key == "Rating") return std::to_string(rating);
+		if (key == "Description") return description;
 	}
 
 	void setValue(int key, string val) {
-		if (key == 0) name = val;
-		if (key == 1) price = stoi(val);
-		if (key == 2) rating = stoi(val);
+		enum Field { TITLE, PRICE, RATING, LEFTITEM, DESCRIPTION };
+
+
+		switch (key)
+		{
+		case TITLE: name = val;
+			break;
+		case PRICE: price = stoi(val);
+			break;
+		case RATING: rating = stoi(val);
+			break;
+		case LEFTITEM: left_item = stoi(val);
+			break;
+		case DESCRIPTION: description = val;
+			break;
+
+
+
+		default: 
+			system("cls");
+			std::cout << "Error key: " << key;
+			system("pause");
+			exit(1);
+		}
 	}
 
     string toString(){

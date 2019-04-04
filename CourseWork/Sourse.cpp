@@ -10,7 +10,7 @@ int main() {
 
 	View view(db.getData());
 
-	//if (!view.login()) return 0; 
+	if (!view.login()) return 0; 
 
 
 
@@ -29,6 +29,7 @@ int main() {
 			}
 			else if (key == 13) {
 				view.data->products[view.itemsSelect].setValue(view.fieldSelect, view.editedField);
+				db.save(view.data);
 				view.viewActive = view.Menu::DETAILITEM;
 			}
 			else {
@@ -43,10 +44,15 @@ int main() {
 		if (key == 13) {
 			if (view.viewActive == view.Menu::LISTITEMS) {
 				view.viewActive = view.Menu::DETAILITEM;
-			}
-			else if (view.viewActive == view.Menu::DETAILITEM) {
+			} else if (view.viewActive == view.Menu::DETAILITEM) {
+				if (view.fieldSelect == 5) {
+					view.viewActive = view.Menu::LISTITEMS;
+
+				} else {
+
 				view.viewActive = view.Menu::EDITITEM;
 				view.editedField = "";
+				}
 
 			}
 		}
@@ -62,28 +68,17 @@ int main() {
 				view.menuActive = !view.menuActive;
 				break;
 
-			case 80: // 
+			case 80: // RIGHT
 				view.cursorDown();
-
 				break;
 
 			case 75: // RIGHT
 				view.menuActive = !view.menuActive;
 				break;
-
-
-
-			default:
-				break;
 			}
 		}
 	}
 	
-
-
-
-
-
 
 	system("pause");
 	return 0;

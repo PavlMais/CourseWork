@@ -62,7 +62,7 @@ Data* DataBase::getData(){
 
 
 User DataBase::parse_user(string data) {
-	int indx1 = data.find("[n]") + 3;
+	int indx1 = data.find("[l]") + 3;
 	int indx2 = data.find("[p]") + 3;
 	int indx3 = data.find("[g]") + 3;
 	User user;
@@ -70,7 +70,6 @@ User DataBase::parse_user(string data) {
 	user.login = data.substr(0, indx1 - 3);
 	user.password = data.substr(indx1, indx2 - indx1 - 3);
 	user.group = stoi(data.substr(indx2, indx3 - indx2 - 3));
-
 	return user;
 }
 
@@ -87,7 +86,7 @@ Product DataBase::parse_product(string data) {
 	Product product;
 
 	product.id       = stoi(data.substr(0, indx1 - 3));
-	product.type     = data.substr(5, 7);
+	product.type     = data.substr(indx1, indx2 - indx1 - 3);
 	product.name     = data.substr(indx2, indx3 - indx2 - 3);
 	product.price    = stof(data.substr(indx3, indx4 - indx3 - 3));
 	product.sale     = stoi(data.substr(indx4, indx5 - indx4 - 3));

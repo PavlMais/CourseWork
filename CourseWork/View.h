@@ -5,7 +5,7 @@ class View
 {
 public:
 	View(Data* data);
-	enum Menu {LISTITEMS, DETAILITEM, EDITITEM};
+	enum Menu {LISTITEMS, DETAILITEM, EDITITEM, ADD};
 	
 	Menu viewActive = Menu::LISTITEMS;
 	bool menuActive = false;
@@ -44,7 +44,7 @@ private:
 
 	string* bildMenu();
 	string* bildListItems();
-	string* bildDetailItem();
+	string* bildDetailItem(Product);
 	string bildItem(Product product);
 };
 

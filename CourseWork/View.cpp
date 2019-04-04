@@ -1,4 +1,5 @@
 #include <iostream>
+#include <conio.h>
 #include <string>
 #include "View.h"
 
@@ -30,13 +31,24 @@ void View::cursorDown(){
 
 void View::View::render() {
 
+	system("cls");// Move to bottom
 
-	system("cls");
 	string *bMenu = bildMenu();
 
 	string *view;
+
 	if (viewActive == Menu::DETAILITEM || viewActive == Menu::EDITITEM) {
-		view = bildDetailItem();
+		view = bildDetailItem(data->products[itemsSelect]);
+	}
+	else if (viewActive == Menu::ADD) {
+		//   _    _
+		//  - -  -- -
+		//   
+		view = bildDetailItem(data->products[itemsSelect]);
+		//
+		//
+		//
+		//
 	}
 	else  {
 		view = bildListItems();
@@ -52,13 +64,11 @@ void View::View::render() {
 
 }
 
-
-
-string* View::bildDetailItem() {
+string* View::bildDetailItem(Product product) {
 
 	string *view = new string[winSizeX];
-	const unsigned short int FIELDSSIZE = 3;
-	string FIELDS[FIELDSSIZE] = { "Title", "Price", "Rating" };
+	const unsigned short int FIELDSSIZE = 6;
+	string FIELDS[FIELDSSIZE] = { "Title", "Price", "Rating","Left item", "Description", "Back"};
 
 	for (int i = 0; i < viewSizeY; i++)
 	{
@@ -67,28 +77,40 @@ string* View::bildDetailItem() {
 	}
 
 
-	for (int i = 0; i < FIELDSSIZE ; i++)
-	{	
+	for (int i = 5, n = 0; i < FIELDSSIZE * 2 + 8; n++, i += 2)
+	{
 
-		if (fieldSelect == i && viewActive == Menu::EDITITEM) {
-			
-			view[i + 1] = "\t> " + FIELDS[i] +": "+ editedField;
+		if (fieldSelect == n ) { // for up line
+			view[i] = char(218);
+			for (unsigned int j = 0; j < viewSizeY; j++) view[i] += char(196);
+			view[i] += char(191);
+		}
+		else if (fieldSelect == n - 1) { // for down line
+			view[i] = char(192);
+			for (unsigned int j = 0; j < viewSizeY; j++) view[i] += char(196);
+			view[i] += char(217);
+		}
+		
 
+		if (n == FIELDSSIZE - 1) {
+			if (fieldSelect == n) view[i + 1] = "\t"+ FIELDS[FIELDSSIZE - 1];
+			else view[i + 1] = "\t>"+ FIELDS[FIELDSSIZE - 1];
 		}
 
-		else if (fieldSelect == i) {
-
-			view[i + 1] = "\t> " + FIELDS[i] + ": " + data->products[itemsSelect].getValue(FIELDS[i]);
+		else if (fieldSelect == n && viewActive == Menu::EDITITEM) {
+			i++;
+			view[i + 1] = "\t> " + FIELDS[n] + ": " + editedField;
+			i++;
 		}
-		else {
-			view[i + 1] = "\t "+FIELDS[i] + ": " + data->products[itemsSelect].getValue(FIELDS[i]);
+		else if (fieldSelect == n) {
+
+			view[i + 1] = "\t> " + FIELDS[n] + ": " + data->products[itemsSelect].getValue(FIELDS[n]);
+		}
+		else if (n < FIELDSSIZE){
+			view[i + 1] = "\t " + FIELDS[n] + ": " + data->products[itemsSelect].getValue(FIELDS[n]);
 
 		}
-
-
 	}
-
-
 	return view;
 }
 
@@ -106,6 +128,8 @@ bool View::login(){
 
 
 		for (int i = 0; i < data->usersSize; i++) {
+			std::cout << data->users[i].login;
+
 			if (data->users[i].login == login) {
 				check_user = data->users[i];
 				users_exists = true;
@@ -118,10 +142,22 @@ bool View::login(){
 	} while (!users_exists);
 
 
-
+	int key;
 	do {
-		std::cout << "\n\t\tTrying: " << left_try << "\n\t\tEnter password: ";
-		std::cin >> password;
+		password = "";
+		while (true)
+		{
+			std::cout << "\n\t\tTrying: " << left_try << "\n\t\tEnter password: ";
+			for (int i = 0; i < password.size(); i++) std::cout << char(249);
+			
+			key = _getch();
+
+			if (key == 13) break;
+			else if (key == 8) password = password.substr(0, password.size() - 1);
+			else password += char(key);
+
+			system("cls");
+		}
 
 		if (password == check_user.password) {
 			activeUser = check_user;
@@ -131,7 +167,7 @@ bool View::login(){
 		left_try--;
 		if (left_try <= 0) return false;
 		system("cls");
-		std::cout << "Passwort incorect";
+		std::cout << "\n\n\t\tPasswort incorect";
 	} while (true);
 
 
