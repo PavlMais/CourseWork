@@ -117,11 +117,13 @@
   <ItemGroup>
     <ClCompile Include="DataBase.cpp" />
     <ClCompile Include="Sourse.cpp" />
+    <ClCompile Include="utils.cpp" />
     <ClCompile Include="View.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Data.h" />
     <ClInclude Include="DataBase.h" />
+    <ClInclude Include="utils.h" />
     <ClInclude Include="View.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
