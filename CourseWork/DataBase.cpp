@@ -3,8 +3,6 @@
 #include "DataBase.h"
 
 
-
-
 DataBase::DataBase()
 {
 }
@@ -12,7 +10,7 @@ DataBase::~DataBase()
 {
 }
 
-void DataBase::save(Data* data){
+void DataBase::save(){
 	string strData = data->toString();
 	
 	std::ofstream file(PATH_DB);
@@ -20,6 +18,8 @@ void DataBase::save(Data* data){
 	file.close();
 
 }
+
+
 
 Data* DataBase::getData(){
 	std::ifstream file(PATH_DB);
@@ -32,28 +32,29 @@ Data* DataBase::getData(){
 	string buffer;
 
 
-	Data *data = new Data;
+	Data *dataN = new Data;
 	
 	getline(file, buffer);
-	data->usersSize = stoi(buffer);
-	data->users = new User[data->usersSize];
+	dataN->usersSize = stoi(buffer);
+	dataN->users = new User[dataN->usersSize];
 
-	for (int i = 0; i < data->usersSize; i++) {
+	for (int i = 0; i < dataN->usersSize; i++) {
 		getline(file, buffer);
-		data->users[i] = parse_user(buffer);
+		dataN->users[i] = parse_user(buffer);
 	}
 
 
 	getline(file, buffer);
-	data->productsSize = stoi(buffer);
-	data->products = new Product[data->productsSize];
+	dataN->productsSize = stoi(buffer);
+	dataN->products = new Product[dataN->productsSize];
 
 	for (int i = 0; getline(file, buffer); i++){
-		data->products[i] = parse_product(buffer);
+		dataN->products[i] = parse_product(buffer);
 	}
 
 	file.close();
-	return data;
+	data = dataN;
+	return dataN;
 }
 
 

@@ -24,7 +24,7 @@ int main() {
 		
 
 		if (view.isfieldEdit) {
-			if(view.editField(key)) db.save(view.data);
+			if(view.editField(key)) db.save();
 			continue;
 		}
 

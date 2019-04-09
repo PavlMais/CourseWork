@@ -8,9 +8,9 @@ public:
 
 	Data* getData();
 
-	void save(Data*);
+	void save();
 
-
+	
 
 
 	
@@ -18,7 +18,7 @@ public:
 	
 private:
 	const string PATH_DB = "text.txt";
-
+	Data* data;
 	Data* parse_data(std::ifstream file);
 	Product parse_product(string line);
 	User parse_user(string line);

@@ -11,10 +11,20 @@ View::View(Data* pdata)
 }
 
 void View::enter() {
-	if (itemOpen) {
+	if (menuActive) {
+		switch (menuSelect){
+		case View::ADD:
+			menuActive = false;
+			itemOpen = true;
+			break;
+		}
+	}
+	else if (itemOpen) {
 		if (fieldSelect == Field::BUTTON) {
 			if (menuSelect == Menu::ADD) {
 				menuSelect = Menu::LISTITEMS;
+				data->addProduct();
+				
 			}
 			itemOpen = false;
 		}
@@ -32,16 +42,16 @@ void View::enter() {
 
 		}
 		return;
-	}
+	} else 
 
 	switch (menuSelect)
 	{
+	case View::ADD:
 	case View::LISTITEMS:
 		itemOpen = true;
 		break;
 
-	case View::ADD:
-		break;
+		
 
 	}
 }
@@ -110,7 +120,7 @@ void View::render() {
 
 	string *view = nullptr;
 
-	std::cout << menuSelect;
+	std::cout << menuSelect << " " << menuActive << " " << itemOpen << " " << isfieldEdit;
 	if (menuSelect == Menu::LISTITEMS) {
 		if (itemOpen) {
 			view = bildDetailItem(data->products[itemsSelect]);
