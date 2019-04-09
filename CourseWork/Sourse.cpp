@@ -10,7 +10,7 @@ int main() {
 
 	View view(db.getData());
 
-	if (!view.login()) return 0; 
+	//if (!view.login()) return 0; 
 
 
 
@@ -23,42 +23,17 @@ int main() {
 		key = _getch();
 		
 
-		if (view.viewActive == view.Menu::EDITITEM) {
-			if (key == 8) {
-				view.editedField = view.editedField.substr(0, view.editedField.size() - 1);
-			}
-			else if (key == 13) {
-				view.data->products[view.itemsSelect].setValue(view.fieldSelect, view.editedField);
-				db.save(view.data);
-				view.viewActive = view.Menu::DETAILITEM;
-			}
-			else {
-
-				view.editedField += char(key);
-			}
-
+		if (view.isfieldEdit) {
+			if(view.editField(key)) db.save(view.data);
 			continue;
 		}
 
 
-		if (key == 13) {
-			if (view.viewActive == view.Menu::LISTITEMS) {
-				view.viewActive = view.Menu::DETAILITEM;
-			} else if (view.viewActive == view.Menu::DETAILITEM) {
-				if (view.fieldSelect == 5) {
-					view.viewActive = view.Menu::LISTITEMS;
-
-				} else {
-
-				view.viewActive = view.Menu::EDITITEM;
-				view.editedField = "";
-				}
-
-			}
-		}
+		if (key == 13) view.enter();
+		
 
 
-		if (key == 224) {
+		else if (key == 224) {
 			switch (_getch()){
 			case 72: // UP
 				view.cursorUp();

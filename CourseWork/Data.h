@@ -23,18 +23,20 @@ struct Product {
 	float rating;
 	string description;
 	int id_company;
-    
-	string getValue(string key) {
-		if (key == "Title") return name;
-		if (key == "Price") return std::to_string(price);
-		if (key == "Rating") return std::to_string(rating);
-		if (key == "Left item") return std::to_string(rating);
-		if (key == "Rating") return std::to_string(rating);
-		if (key == "Description") return description;
+	enum Field { TITLE, PRICE, RATING, LEFTITEM, DESCRIPTION };
+
+	string getValue(int field) {
+		switch (field) {
+		case Field:: TITLE: return name;
+		case Field:: PRICE: return std::to_string(price);
+		case Field:: RATING: return std::to_string(rating);
+		case Field:: LEFTITEM: return std::to_string(left_item);
+		case Field:: DESCRIPTION: return description;
+		default: return " ";
+		}
 	}
 
 	void setValue(int key, string val) {
-		enum Field { TITLE, PRICE, RATING, LEFTITEM, DESCRIPTION };
 
 
 		switch (key)
@@ -79,6 +81,7 @@ struct Company {
 };
 struct Data {
 	Product* products;
+	Product new_product;
 	int productsSize;
 	User* users;
 	int usersSize;
