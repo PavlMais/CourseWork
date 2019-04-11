@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DEFECTS>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\pavl\desktop\coursework\coursework</FILEPATH>
+      <FILENAME>data.h</FILENAME>
+      <LINE>71</LINE>
+      <COLUMN>0</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'Product::id' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>Product::{ctor}</FUNCTION>
+    <DECORATED>??0Product@@QAE@XZ</DECORATED>
+    <FUNCLINE>71</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\pavl\desktop\coursework\coursework</FILEPATH>
+      <FILENAME>data.h</FILENAME>
+      <LINE>71</LINE>
+      <COLUMN>0</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'Product::id_company' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>Product::{ctor}</FUNCTION>
+    <DECORATED>??0Product@@QAE@XZ</DECORATED>
+    <FUNCLINE>71</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\pavl\desktop\coursework\coursework</FILEPATH>
+      <FILENAME>database.cpp</FILENAME>
+      <LINE>6</LINE>
+      <COLUMN>10</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'DataBase::data' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>DataBase::{ctor}</FUNCTION>
+    <DECORATED>??0DataBase@@QAE@XZ</DECORATED>
+    <FUNCLINE>6</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\pavl\desktop\coursework\coursework</FILEPATH>
+      <FILENAME>data.h</FILENAME>
+      <LINE>128</LINE>
+      <COLUMN>0</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'Data::usersSize' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>Data::{ctor}</FUNCTION>
+    <DECORATED>??0Data@@QAE@XZ</DECORATED>
+    <FUNCLINE>128</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\pavl\desktop\coursework\coursework</FILEPATH>
+      <FILENAME>data.h</FILENAME>
+      <LINE>128</LINE>
+      <COLUMN>0</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'Data::users' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>Data::{ctor}</FUNCTION>
+    <DECORATED>??0Data@@QAE@XZ</DECORATED>
+    <FUNCLINE>128</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\pavl\desktop\coursework\coursework</FILEPATH>
+      <FILENAME>data.h</FILENAME>
+      <LINE>128</LINE>
+      <COLUMN>0</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'Data::productsSize' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>Data::{ctor}</FUNCTION>
+    <DECORATED>??0Data@@QAE@XZ</DECORATED>
+    <FUNCLINE>128</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\pavl\desktop\coursework\coursework</FILEPATH>
+      <FILENAME>data.h</FILENAME>
+      <LINE>128</LINE>
+      <COLUMN>0</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'Data::products' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>Data::{ctor}</FUNCTION>
+    <DECORATED>??0Data@@QAE@XZ</DECORATED>
+    <FUNCLINE>128</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\users\pavl\desktop\coursework\coursework</FILEPATH>
+      <FILENAME>data.h</FILENAME>
+      <LINE>14</LINE>
+      <COLUMN>0</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'User::group' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>User::{ctor}</FUNCTION>
+    <DECORATED>??0User@@QAE@XZ</DECORATED>
+    <FUNCLINE>14</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+</DEFECTS>

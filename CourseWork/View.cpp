@@ -13,9 +13,9 @@ View::View(Data* pdata)
 
 void View::enter()
 {
-	if (menuActive) {
+	if (menuActive == 0) {
 		menuSelect = menuCursor;
-		menuActive = false;
+		menuActive = 1;
 	}
 	else if (itemOpen || menuSelect == Menu::ADD) {
 		if (fieldSelect == Field::BUTTON) {
@@ -77,7 +77,8 @@ bool View::editField(int key)
 }
 
 void View::cursorUp(){
-	if (menuActive) menuCursor--;
+	if (menuActive == 0) menuCursor--;
+	else if (menuActive == 2) filterFiledSelect--;
 
 	else if(itemOpen) fieldSelect--;
 	else
@@ -91,10 +92,12 @@ void View::cursorUp(){
 		break;
 	
 	}
-
+	
 }
 void View::cursorDown(){
-	if (menuActive) menuCursor++;
+	if (menuActive == 0) menuCursor++;
+	else if (menuActive == 2) filterFiledSelect++;
+
 	else if (itemOpen) fieldSelect++;
 
 	else
@@ -120,7 +123,11 @@ void View::render() {
 	string *view = nullptr;
 
 	string *subView = nullptr;
+	
+	
 	//std::cout << "Menu size: " << menuSizeY << "  View size: " << viewSizeY << "  Sub view size: " << subViewSizeY;
+	
+	std::cout << "Menu select: " << menuActive;
 	if (menuSelect == Menu::LISTITEMS) {
 		if (itemOpen) {
 			view = bildDetailItem(data->products[itemsSelect]);
@@ -192,13 +199,15 @@ string* View::bildDetailItem(Product product) {
 	
 }
 string View::title(string title, int size) {
+	std::cout << "txtSize: " << title.size() << " size: " << size;
 	string str;
 	size = size - title.size(); // TODO: ReWrite
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < size + 1; i++)
 	{
 		if (i == size / 2) str += title;
-		else str += " ";
+		else str += "-";
 	}
+	std::cout << "txtSize: " << str.size() << "\n";
 	return str;
 }
 string View::topLine(int size)
@@ -293,7 +302,7 @@ string* View::bildMenu() {
 
 	for (int m = 0, i = 1; m < menuCount; m++, i += 3)
 	{		
-		if (menuActive && menuCursor == m && m == menuSelect) {
+		if (menuActive == 0 && menuCursor == m && m == menuSelect) {
 			vLine = char(186);
 			hLine = char(205);
 
@@ -321,7 +330,7 @@ string* View::bildMenu() {
 			BRR = char(191);
 			CR = ' ';
 		}
-		else if (menuActive && menuCursor == m) {
+		else if (menuActive == 0 && menuCursor == m) {
 			vLine = char(186);
 			hLine = char(205);
 
@@ -381,7 +390,7 @@ string* View::bildMenu() {
 }
 
 string View::bildItem(Product product) {
-	const unsigned short int widthItem = viewSizeY - 7;
+	const unsigned short int widthItem = viewSizeY - 6;
 	const unsigned short int widthID = widthItem * 10 / 100;
 	const unsigned short int widthTitle = widthItem * 40 / 100;
 	const unsigned short int widthPrice = widthItem * 25 / 100;
@@ -411,13 +420,6 @@ string* View::bildListItems() {
 	view[0] = title("ID Name Price", viewSizeY);
 
 
-
-
-
-
-
-
-
 	if (itemsSelect < 0) itemsSelect = 0;// add ring ring
 	if (itemsSelect > data->productsSize - 1) itemsSelect = data->productsSize - 1;
 	
@@ -427,18 +429,18 @@ string* View::bildListItems() {
 	
 	for (int VIter = 1, IIter = offsetItems; VIter < winSizeX - 1 && IIter < data->productsSize; VIter += 2, IIter++)
 	{
-		if (IIter == itemsSelect && !menuActive) view[VIter] = topLine(viewSizeY);
-		else if (IIter == itemsSelect + 1 && !menuActive) view[VIter] = bottomLine(viewSizeY);
+		if (IIter == itemsSelect && menuActive == 1) view[VIter] = topLine(viewSizeY);
+		else if (IIter == itemsSelect + 1 && menuActive == 1) view[VIter] = bottomLine(viewSizeY);
 		else for (int i = 0; i < viewSizeY; i++) view[VIter] += " ";
 		
 
 
-		if(IIter == itemsSelect && !menuActive)
+		if(IIter == itemsSelect && menuActive == 1)
 			view[VIter + 1] = char(179) + bildItem(data->products[IIter]) + char(179);
 		else
 			view[VIter + 1] = " "+ bildItem(data->products[IIter]) + " ";
 
-		if (itemsSelect == data->productsSize - 1 && !menuActive) view[VIter + 2] = bottomLine(viewSizeY);
+		if (itemsSelect == data->productsSize - 1 && menuActive == 1) view[VIter + 2] = bottomLine(viewSizeY);
 	}
 	return view;
 }
@@ -447,30 +449,35 @@ string* View::bildListItems() {
 
 
 string* View::bildSubView() {
-
-	//search
-	//sort
-	//filter
 	const short int FIELDSSIZE = 3;
 	char VLINE = char(179);
 	string FIELDS[FIELDSSIZE] = { "Search", "Sort", "Filter" };
 
 	string* subView = new string[winSizeX];
 
+
+
+	if (filterFiledSelect < 0)filterFiledSelect = 0;
+	else if (filterFiledSelect > 2) filterFiledSelect = 2;
+
+	for (int i = 0; i < winSizeX; i++) subView[i] = VLINE;
+	
+
+
 	for (int n = 0, i = 0; n < FIELDSSIZE; n++, i += 3)
 	{
-		if (n == filterFiledSelect) {
+		if (n == filterFiledSelect && menuActive == 2) {
 			
-			subView[i] = VLINE + topLine(subViewSizeY);
-			subView[i + 1] = VLINE + FIELDS[n];
-			subView[i + 2] =VLINE + bottomLine(subViewSizeY);
-			
+			subView[i] += topLine(subViewSizeY);
+			subView[i + 1] += VLINE + FIELDS[n] + ":";
+			subView[i + 2] += bottomLine(subViewSizeY);
+		
 
 		}
 		else {
-			subView[i] = VLINE + topLine(subViewSizeY);
-			subView[i + 1] = VLINE + FIELDS[n];
-			subView[i + 2] = VLINE + bottomLine(subViewSizeY);
+			
+			subView[i + 1] += " " + FIELDS[n] + ":";
+			
 
 		}
 

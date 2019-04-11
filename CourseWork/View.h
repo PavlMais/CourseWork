@@ -21,8 +21,9 @@ public:
 
 
 	// ----- MENU ----- // 
+	enum MenuActive{MENU, VIEW, SUBVIEW};
+	int menuActive = 0;
 
-	bool menuActive = false;
 	int menuSelect = LISTITEMS;
 	short int menuCursor = LISTITEMS;
 	
@@ -75,7 +76,7 @@ private:
 	enum Menu {LISTITEMS, ADD};
 
 	unsigned int winSizeX = 20;
-	unsigned int winSizeY = 100;
+	unsigned int winSizeY = 105;
 	unsigned int menuSizeY = winSizeY * 20 / 100;
 	unsigned int viewSizeY = winSizeY * 50 / 100;
 	unsigned int subViewSizeY = winSizeY  * 30 / 100;

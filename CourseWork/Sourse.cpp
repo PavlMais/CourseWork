@@ -24,6 +24,13 @@ int main() {
 		
 
 		if (view.isfieldEdit) {
+
+
+
+
+
+
+
 			if(view.editField(key)) db.save();
 			continue;
 		}
@@ -40,7 +47,9 @@ int main() {
 				break;
 
 			case 77: // LEFT
-				view.menuActive = !view.menuActive;
+				
+				view.menuActive++;
+				if (view.menuActive > 1) view.menuActive = 2;
 				break;
 
 			case 80: // RIGHT
@@ -48,7 +57,8 @@ int main() {
 				break;
 
 			case 75: // RIGHT
-				view.menuActive = !view.menuActive;
+				view.menuActive--;
+				if (view.menuActive < 0) view.menuActive = 0;
 				break;
 			}
 		}
