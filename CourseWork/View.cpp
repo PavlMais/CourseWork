@@ -17,6 +17,16 @@ void View::enter()
 		menuSelect = menuCursor;
 		menuActive = 1;
 	}
+	else if (menuActive == 2) {
+		isfieldEdit = true;
+		fieldSelect = filterFiledSelect;
+		
+	
+	}
+	else if (menuActive == 1) {
+		itemOpen = true;
+	}
+
 	else if (itemOpen || menuSelect == Menu::ADD) {
 		if (fieldSelect == Field::BUTTON) {
 			if (menuSelect == Menu::ADD) {
@@ -40,18 +50,8 @@ void View::enter()
 
 		}
 		return;
-	} else 
+	} 
 
-	switch (menuSelect)
-	{
-	case View::ADD:
-	case View::LISTITEMS:
-		itemOpen = true;
-		break;
-
-		
-
-	}
 }
 
 bool View::editField(int key)
@@ -62,6 +62,25 @@ bool View::editField(int key)
 	}
 	else if (key == 13)
 	{
+		std::cout << fieldSelect;
+		switch (fieldSelect)
+		{
+
+		case 0:
+			filterSearch = editedField;
+			isfieldEdit = false;
+			fieldSelect = NONE;
+			break;
+
+		case 1:
+		default:
+			break;
+		}
+
+
+
+		
+/*
 		if (menuSelect == Menu::ADD) {
 			data->new_product.setValue(fieldSelect, editedField);
 		}
@@ -69,7 +88,7 @@ bool View::editField(int key)
 			data->products[itemsSelect].setValue(fieldSelect, editedField);
 		}
 		isfieldEdit = false;
-		return true;
+		return true;*/
 	}
 	else editedField += char(key);
 
@@ -466,17 +485,34 @@ string* View::bildSubView() {
 
 	for (int n = 0, i = 0; n < FIELDSSIZE; n++, i += 3)
 	{
+
+
+
+
 		if (n == filterFiledSelect && menuActive == 2) {
 			
-			subView[i] += topLine(subViewSizeY);
-			subView[i + 1] += VLINE + FIELDS[n] + ":";
-			subView[i + 2] += bottomLine(subViewSizeY);
+			if (fieldSelect == n && isfieldEdit) {
+
+				subView[i] += topLine(subViewSizeY);
+				subView[i + 1] += VLINE + FIELDS[n] + ":" + editedField;
+				subView[i + 2] += bottomLine(subViewSizeY);
+
+			}
+			else {
+				subView[i] += topLine(subViewSizeY);
+				subView[i + 1] += VLINE + FIELDS[n] + ":" + getFilterField(n);
+				subView[i + 2] += bottomLine(subViewSizeY);
+
+			}
+
+
 		
 
 		}
+	
 		else {
 			
-			subView[i + 1] += " " + FIELDS[n] + ":";
+			subView[i + 1] += " " + FIELDS[n] + ":" + getFilterField(n);
 			
 
 		}
@@ -486,6 +522,16 @@ string* View::bildSubView() {
 	return subView;
 
 
+}
+
+string View::getFilterField(int key) {
+
+	switch (key)
+	{
+	case 0: return filterSearch;
+	
+	default: return "";
+	}
 }
 
 

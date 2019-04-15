@@ -20,6 +20,7 @@ public:
 	short int fieldSelect = 0;
 
 
+
 	// ----- MENU ----- // 
 	enum MenuActive{MENU, VIEW, SUBVIEW};
 	int menuActive = 0;
@@ -35,6 +36,8 @@ public:
 	int maxPrice = 0;
 	enum SortBy {NONE, MONEYUP, MONEYDOWN, RATINGUP};
 	int sort = SortBy::NONE;
+
+	string filterSearch = " - ";
 
 
 
@@ -70,6 +73,9 @@ public:
 
 	enum Field { TITLE, PRICE, RATING, LEFTITEM, DESCRIPTION, BUTTON };
 
+	enum class AllFields {NONE, TITLE, PRICE, RATING, LEFTITEM, DESCRIPTION, BUTTON, SEARCH, SORT, FILTER};
+
+
 private:
 	User activeUser;
 
@@ -92,6 +98,8 @@ private:
 	string* bildSearch();
 	string* bildListItems();
 	string* bildSubView();
+
+	string getFilterField(int key);
 
 	string* bildDetailItem(Product);
 
