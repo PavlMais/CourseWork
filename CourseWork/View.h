@@ -19,6 +19,9 @@ public:
 	short int addFieldSelect = 0;
 	short int fieldSelect = 0;
 
+	//enum Field { TITLE, PRICE, RATING, LEFTITEM, DESCRIPTION, BUTTON };
+
+	enum  Field {NONE, TITLE, PRICE, RATING, LEFTITEM, DESCRIPTION, BUTTON, SEARCH, SORT, FILTER};
 
 
 	// ----- MENU ----- // 
@@ -27,22 +30,24 @@ public:
 
 	int menuSelect = LISTITEMS;
 	short int menuCursor = LISTITEMS;
+	int viewActive = 0;
 	
 
 
 	// ----- FIlter ------- //
+	int filedItemSelect = 0;
 	int filterFiledSelect = 0;
 	int minPrice = 0;
 	int maxPrice = 0;
-	enum SortBy {NONE, MONEYUP, MONEYDOWN, RATINGUP};
-	int sort = SortBy::NONE;
+	enum SortBy {NOSORT, MONEYUP, MONEYDOWN, RATINGUP};
+	int sort = SortBy::NOSORT;
 
 	string filterSearch = " - ";
 
 
 
-
-
+	enum class vActive  {LISTITEMS, ADDITEMS, DETAILITEMS};
+	
 
 
 
@@ -71,9 +76,6 @@ public:
 	
 
 
-	enum Field { TITLE, PRICE, RATING, LEFTITEM, DESCRIPTION, BUTTON };
-
-	enum class AllFields {NONE, TITLE, PRICE, RATING, LEFTITEM, DESCRIPTION, BUTTON, SEARCH, SORT, FILTER};
 
 
 private:

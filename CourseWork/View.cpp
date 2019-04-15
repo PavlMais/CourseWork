@@ -13,44 +13,34 @@ View::View(Data* pdata)
 
 void View::enter()
 {
-	if (menuActive == 0) {
-		menuSelect = menuCursor;
+	if (menuActive == 0) {// MENU
+		viewActive = menuCursor;
 		menuActive = 1;
 	}
-	else if (menuActive == 2) {
+	else if (menuActive == 1) { // VIEW
+
+		if (viewActive == 0) {// ListITEMS
+			viewActive = 2;
+		} 
+		else if(viewActive == 2) {// DETSIILITEMS
+
+			if (filedItemSelect == Field::BUTTON) viewActive = 0;
+			else {
+				isfieldEdit = true;
+
+				editedField = data->products[itemsSelect].getValue(filedItemSelect);
+			}
+		}
+	}
+
+	else if (menuActive == 2) { // SUB VIEW
 		isfieldEdit = true;
 		fieldSelect = filterFiledSelect;
 		
 	
 	}
-	else if (menuActive == 1) {
-		itemOpen = true;
-	}
 
-	else if (itemOpen || menuSelect == Menu::ADD) {
-		if (fieldSelect == Field::BUTTON) {
-			if (menuSelect == Menu::ADD) {
-				menuSelect = Menu::LISTITEMS;
-				data->addProduct();
-				
-			}
-			itemOpen = false;
-		}
-		else 
-		{
-			isfieldEdit = true;
-			if (menuSelect == Menu::ADD) {
-				editedField = data->new_product.getValue(fieldSelect);
 
-			}
-			else {
-
-				editedField = data->products[itemsSelect].getValue(fieldSelect);
-			}
-
-		}
-		return;
-	} 
 
 }
 
@@ -63,32 +53,44 @@ bool View::editField(int key)
 	else if (key == 13)
 	{
 		std::cout << fieldSelect;
+		Product *prdc;
+
+		if (viewActive == 0) {
+			prdc = &data->products[itemsSelect];
+		}
+		else if (viewActive == 1) {
+			prdc = &data->new_product;
+		}
+		else {
+			prdc = nullptr;
+		}
+
+
+
+
 		switch (fieldSelect)
 		{
+		case Field::TITLE:
+			prdc->setValue(fieldSelect, editedField);
+			break;
 
-		case 0:
+		case Field::SEARCH:
 			filterSearch = editedField;
-			isfieldEdit = false;
 			fieldSelect = NONE;
 			break;
 
-		case 1:
-		default:
-			break;
+	
 		}
 
+		isfieldEdit = false;
 
 
 		
-/*
-		if (menuSelect == Menu::ADD) {
-			data->new_product.setValue(fieldSelect, editedField);
-		}
-		else {
-			data->products[itemsSelect].setValue(fieldSelect, editedField);
-		}
-		isfieldEdit = false;
-		return true;*/
+
+		
+		
+		
+		return true;
 	}
 	else editedField += char(key);
 
@@ -98,38 +100,47 @@ bool View::editField(int key)
 void View::cursorUp(){
 	if (menuActive == 0) menuCursor--;
 	else if (menuActive == 2) filterFiledSelect--;
+	else if (menuActive == 1) {
+		if (viewActive == 0) {
+			itemsSelect--;
 
-	else if(itemOpen) fieldSelect--;
-	else
-	switch(menuSelect){
-	case Menu::LISTITEMS:
-		itemsSelect--; 
-		break;
 
-	case Menu::ADD:
-		fieldSelect--;
-		break;
-	
+		}
+		else if (viewActive == 1) {
+			filedItemSelect--;
+
+		}
+		else if (viewActive == 2) {
+			filedItemSelect--;
+		}
+
+
 	}
+
+
 	
 }
 void View::cursorDown(){
 	if (menuActive == 0) menuCursor++;
 	else if (menuActive == 2) filterFiledSelect++;
-
-	else if (itemOpen) fieldSelect++;
-
-	else
-		switch (menuSelect) {
-		case Menu::LISTITEMS:
-			std::cout << "WOWOWO";
+	else if (menuActive == 1) {
+		if (viewActive == 0) {
 			itemsSelect++;
-			break;
-		case Menu::ADD:
-			fieldSelect++;
-			break;
+
 
 		}
+		else if (viewActive == 1) {
+			filedItemSelect++;
+
+		}
+		else if (viewActive == 2) {
+			filedItemSelect++;
+		}
+
+
+	}
+
+
 }
 
 
@@ -146,24 +157,37 @@ void View::render() {
 	
 	//std::cout << "Menu size: " << menuSizeY << "  View size: " << viewSizeY << "  Sub view size: " << subViewSizeY;
 	
-	std::cout << "Menu select: " << menuActive;
-	if (menuSelect == Menu::LISTITEMS) {
-		if (itemOpen) {
+	std::cout << "Menu active: " << menuActive << " ViewActive: " << viewActive << "\n";
+	if (viewActive == 0) subView = bildSubView();
+	else subView = new string[winSizeX];
+
+
+	if (viewActive == 0) {
+		
+		view = bildListItems();
+		
+		
+	}
+	else if (viewActive == 2) {
 			view = bildDetailItem(data->products[itemsSelect]);
 
-		}
-		else {
-			view = bildListItems();
-			subView = bildSubView();
-		}
+			
+
+
 	}
-	else if (menuSelect == Menu::ADD) {
+	else if (viewActive == 1) {
 		view = bildDetailItem(data->new_product);
+
+		
+
 
 	}
 	else {
 		std::cout << "Menu not found:/\n\n";
 		view = new string[winSizeX];
+
+		
+
 	}
 
 
@@ -179,7 +203,7 @@ string* View::bildDetailItem(Product product) {
 	const unsigned short int FIELDSSIZE = 6;
 	string FIELDS[FIELDSSIZE] = { "Title", "Price", "Rating","Left item", "Description"};
 
-	FIELDS[5] = (menuSelect == Menu::LISTITEMS) ? "Back" : "Save";
+	FIELDS[5] = (viewActive == 2) ? "Back" : "Save";
 	string *view = new string[winSizeX];
 
 	view[0] = title("View", viewSizeY);
@@ -189,24 +213,24 @@ string* View::bildDetailItem(Product product) {
 
 	for (int i = 5, n = 0; i < FIELDSSIZE * 2 + 8; n++, i += 2)
 	{
-		if (fieldSelect == n && !menuActive) view[i] = topLine(viewSizeY);
-		else if (fieldSelect == n - 1 && !menuActive)  view[i] = bottomLine(viewSizeY);
+		if (filedItemSelect == n && menuActive == 1) view[i] = topLine(viewSizeY);
+		else if (filedItemSelect == n - 1 && menuActive == 1)  view[i] = bottomLine(viewSizeY);
 		else view[i] = "";
 		
 
-		if (n == FIELDSSIZE - 1 && !menuActive) { // for button
-			if (fieldSelect == n) view[i + 1] = "\t "+ FIELDS[FIELDSSIZE - 1];
+		if (n == FIELDSSIZE - 1 && menuActive == 1) { // for button
+			if (filedItemSelect == n) view[i + 1] = "\t "+ FIELDS[FIELDSSIZE - 1];
 			else view[i + 1] = "\t "+ FIELDS[FIELDSSIZE - 1];
 		}
 
-		else if (fieldSelect == n && isfieldEdit) {
+		else if (filedItemSelect == n && isfieldEdit) {
 
 			i++;
 			view[i] = "\t Edit mode:";
 			view[i + 1] = "\t " + FIELDS[n] + ": " + editedField;
 			i++;
 		}
-		else if (fieldSelect == n && !menuActive) {
+		else if (filedItemSelect == n && menuActive == 1) {
 
 			view[i + 1] = "\t " + FIELDS[n] + ": " + product.getValue(n);
 		}
@@ -218,7 +242,7 @@ string* View::bildDetailItem(Product product) {
 	
 }
 string View::title(string title, int size) {
-	std::cout << "txtSize: " << title.size() << " size: " << size;
+	//std::cout << "txtSize: " << title.size() << " size: " << size;
 	string str;
 	size = size - title.size(); // TODO: ReWrite
 	for (int i = 0; i < size + 1; i++)
@@ -226,7 +250,7 @@ string View::title(string title, int size) {
 		if (i == size / 2) str += title;
 		else str += "-";
 	}
-	std::cout << "txtSize: " << str.size() << "\n";
+	//std::cout << "txtSize: " << str.size() << "\n";
 	return str;
 }
 string View::topLine(int size)
