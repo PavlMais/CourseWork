@@ -13,32 +13,38 @@ View::View(Data* pdata)
 
 void View::enter()
 {
-	if (menuActive == 0) {// MENU
-		viewActive = menuCursor;
-		menuActive = 1;
+
+	if (isMenuActive) {
+		viewActive = menuSelect;
+		isMenuActive = false;
 	}
-	else if (menuActive == 1) { // VIEW
+	else {
 
-		if (viewActive == 0) {// ListITEMS
-			viewActive = 2;
-		} 
-		else if(viewActive == 2) {// DETSIILITEMS
-
-			if (filedItemSelect == Field::BUTTON) viewActive = 0;
+		switch (viewActive)
+		{
+		case LISTITEMS: viewActive = DETAILITEMS; break;
+		case DETAILITEMS:
+			if (filedItemSelect == BUTTON) {
+				viewActive = LISTITEMS;
+				// Save
+			}
 			else {
-				isfieldEdit = true;
+				std::cout << "EDITING!!!";
 
+				isfieldEdit = true;
 				editedField = data->products[itemsSelect].getValue(filedItemSelect);
 			}
+			break;
+		default:
+			std::cout << "Error! ln 29";
+			break;
 		}
+
 	}
 
-	else if (menuActive == 2) { // SUB VIEW
-		isfieldEdit = true;
-		fieldSelect = filterFiledSelect;
-		
+
+
 	
-	}
 
 
 
@@ -52,44 +58,19 @@ bool View::editField(int key)
 	}
 	else if (key == 13)
 	{
-		std::cout << fieldSelect;
-		Product *prdc;
-
-		if (viewActive == 0) {
-			prdc = &data->products[itemsSelect];
-		}
-		else if (viewActive == 1) {
-			prdc = &data->new_product;
-		}
-		else {
-			prdc = nullptr;
-		}
-
-
-
-
-		switch (fieldSelect)
+		switch (viewActive)
 		{
-		case Field::TITLE:
-			prdc->setValue(fieldSelect, editedField);
+		case DETAILITEMS: 
+			data->products[itemsSelect].setValue(filedItemSelect, editedField);
 			break;
-
-		case Field::SEARCH:
-			filterSearch = editedField;
-			fieldSelect = NONE;
+		default:
 			break;
-
-	
 		}
+
 
 		isfieldEdit = false;
 
 
-		
-
-		
-		
-		
 		return true;
 	}
 	else editedField += char(key);
@@ -98,9 +79,8 @@ bool View::editField(int key)
 }
 
 void View::cursorUp(){
-	if (menuActive == 0) menuCursor--;
-	else if (menuActive == 2) filterFiledSelect--;
-	else if (menuActive == 1) {
+	if (isMenuActive) menuSelect--;
+	else{
 		if (viewActive == 0) {
 			itemsSelect--;
 
@@ -121,9 +101,8 @@ void View::cursorUp(){
 	
 }
 void View::cursorDown(){
-	if (menuActive == 0) menuCursor++;
-	else if (menuActive == 2) filterFiledSelect++;
-	else if (menuActive == 1) {
+	if (isMenuActive) menuSelect++;
+	else {
 		if (viewActive == 0) {
 			itemsSelect++;
 
@@ -152,42 +131,21 @@ void View::render() {
 
 	string *view = nullptr;
 
-	string *subView = nullptr;
-	
 	
 	//std::cout << "Menu size: " << menuSizeY << "  View size: " << viewSizeY << "  Sub view size: " << subViewSizeY;
 	
-	std::cout << "Menu active: " << menuActive << " ViewActive: " << viewActive << "\n";
-	if (viewActive == 0) subView = bildSubView();
-	else subView = new string[winSizeX];
+	std::cout << "Menu active: " << isMenuActive << " ViewActive: " << viewActive << "\n";
+	
 
-
-	if (viewActive == 0) {
-		
-		view = bildListItems();
-		
-		
-	}
-	else if (viewActive == 2) {
-			view = bildDetailItem(data->products[itemsSelect]);
-
-			
-
-
-	}
-	else if (viewActive == 1) {
-		view = bildDetailItem(data->new_product);
-
-		
-
-
-	}
-	else {
-		std::cout << "Menu not found:/\n\n";
-		view = new string[winSizeX];
-
-		
-
+	
+	switch (viewActive) {
+		case LISTITEMS: view = bildListItems(); break;
+		case ADDITEMS: view = bildDetailItem(data->new_product); break;
+		case DETAILITEMS: view = bildDetailItem(data->products[itemsSelect]); break;
+		default:
+			std::cout << "Menu not found:/\n\n";
+			view = new string[winSizeX];
+			break;
 	}
 
 
@@ -195,7 +153,7 @@ void View::render() {
 
 
 	string buffer;
-	for (int i = 0; i < winSizeX; i++) buffer += bMenu[i] + view[i] + subView[i] +"\n";
+	for (int i = 0; i < winSizeX; i++) buffer += bMenu[i] + view[i] +"\n";
 	std::cout << buffer;
 }
 
@@ -213,12 +171,12 @@ string* View::bildDetailItem(Product product) {
 
 	for (int i = 5, n = 0; i < FIELDSSIZE * 2 + 8; n++, i += 2)
 	{
-		if (filedItemSelect == n && menuActive == 1) view[i] = topLine(viewSizeY);
-		else if (filedItemSelect == n - 1 && menuActive == 1)  view[i] = bottomLine(viewSizeY);
+		if (filedItemSelect == n && !isMenuActive) view[i] = topLine(viewSizeY);
+		else if (filedItemSelect == n - 1 && !isMenuActive)  view[i] = bottomLine(viewSizeY);
 		else view[i] = "";
 		
 
-		if (n == FIELDSSIZE - 1 && menuActive == 1) { // for button
+		if (n == FIELDSSIZE - 1 && !isMenuActive) { // for button
 			if (filedItemSelect == n) view[i + 1] = "\t "+ FIELDS[FIELDSSIZE - 1];
 			else view[i + 1] = "\t "+ FIELDS[FIELDSSIZE - 1];
 		}
@@ -230,7 +188,7 @@ string* View::bildDetailItem(Product product) {
 			view[i + 1] = "\t " + FIELDS[n] + ": " + editedField;
 			i++;
 		}
-		else if (filedItemSelect == n && menuActive == 1) {
+		else if (filedItemSelect == n && !isMenuActive) {
 
 			view[i + 1] = "\t " + FIELDS[n] + ": " + product.getValue(n);
 		}
@@ -338,14 +296,14 @@ string* View::bildMenu() {
 	for (unsigned int _ = 0; _ < menuSizeY + 2; _++) menu[0] += " ";
 	menu[0] += char(179);
 
-	//std::cout << "M sel:"<<menuSelect << " M act:" << menuActive << " M cur:" <<menuCursor <<   "\n";
+	//std::cout << "M sel:"<<isMenuActive << " M act:" << viewFocus << " M cur:" <<menuSelect <<   "\n";
 
-	if (menuCursor < 0) menuCursor = menuCount - 1;
-	else if (menuCursor >= menuCount) menuCursor = 0;
+	if (menuSelect < 0) menuSelect = menuCount - 1;
+	else if (menuSelect >= menuCount) menuSelect = 0;
 
 	for (int m = 0, i = 1; m < menuCount; m++, i += 3)
 	{		
-		if (menuActive == 0 && menuCursor == m && m == menuSelect) {
+		if (isMenuActive && menuSelect == m && m == menuActive) {
 			vLine = char(186);
 			hLine = char(205);
 
@@ -360,7 +318,7 @@ string* View::bildMenu() {
 			CR = ' ';
 		}
 		
-		else if (menuSelect == m) {
+		else if (menuActive == m) {
 			vLine = char(179);
 			hLine = char(196);
 			TR = char(196);
@@ -373,7 +331,7 @@ string* View::bildMenu() {
 			BRR = char(191);
 			CR = ' ';
 		}
-		else if (menuActive == 0 && menuCursor == m) {
+		else if (isMenuActive && menuSelect == m) {
 			vLine = char(186);
 			hLine = char(205);
 
@@ -472,18 +430,18 @@ string* View::bildListItems() {
 	
 	for (int VIter = 1, IIter = offsetItems; VIter < winSizeX - 1 && IIter < data->productsSize; VIter += 2, IIter++)
 	{
-		if (IIter == itemsSelect && menuActive == 1) view[VIter] = topLine(viewSizeY);
-		else if (IIter == itemsSelect + 1 && menuActive == 1) view[VIter] = bottomLine(viewSizeY);
+		if (IIter == itemsSelect && !isMenuActive) view[VIter] = topLine(viewSizeY);
+		else if (IIter == itemsSelect + 1 && !isMenuActive) view[VIter] = bottomLine(viewSizeY);
 		else for (int i = 0; i < viewSizeY; i++) view[VIter] += " ";
 		
 
 
-		if(IIter == itemsSelect && menuActive == 1)
+		if(IIter == itemsSelect && !isMenuActive)
 			view[VIter + 1] = char(179) + bildItem(data->products[IIter]) + char(179);
 		else
 			view[VIter + 1] = " "+ bildItem(data->products[IIter]) + " ";
 
-		if (itemsSelect == data->productsSize - 1 && menuActive == 1) view[VIter + 2] = bottomLine(viewSizeY);
+		if (itemsSelect == data->productsSize - 1 && !isMenuActive) view[VIter + 2] = bottomLine(viewSizeY);
 	}
 	return view;
 }
@@ -491,71 +449,6 @@ string* View::bildListItems() {
 
 
 
-string* View::bildSubView() {
-	const short int FIELDSSIZE = 3;
-	char VLINE = char(179);
-	string FIELDS[FIELDSSIZE] = { "Search", "Sort", "Filter" };
 
-	string* subView = new string[winSizeX];
-
-
-
-	if (filterFiledSelect < 0)filterFiledSelect = 0;
-	else if (filterFiledSelect > 2) filterFiledSelect = 2;
-
-	for (int i = 0; i < winSizeX; i++) subView[i] = VLINE;
-	
-
-
-	for (int n = 0, i = 0; n < FIELDSSIZE; n++, i += 3)
-	{
-
-
-
-
-		if (n == filterFiledSelect && menuActive == 2) {
-			
-			if (fieldSelect == n && isfieldEdit) {
-
-				subView[i] += topLine(subViewSizeY);
-				subView[i + 1] += VLINE + FIELDS[n] + ":" + editedField;
-				subView[i + 2] += bottomLine(subViewSizeY);
-
-			}
-			else {
-				subView[i] += topLine(subViewSizeY);
-				subView[i + 1] += VLINE + FIELDS[n] + ":" + getFilterField(n);
-				subView[i + 2] += bottomLine(subViewSizeY);
-
-			}
-
-
-		
-
-		}
-	
-		else {
-			
-			subView[i + 1] += " " + FIELDS[n] + ":" + getFilterField(n);
-			
-
-		}
-
-	}
-	
-	return subView;
-
-
-}
-
-string View::getFilterField(int key) {
-
-	switch (key)
-	{
-	case 0: return filterSearch;
-	
-	default: return "";
-	}
-}
 
 

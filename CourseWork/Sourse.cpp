@@ -48,8 +48,8 @@ int main() {
 
 			case 77: // LEFT
 				
-				view.menuActive++;
-				if (view.menuActive > 1) view.menuActive = 2;
+				view.isMenuActive = !view.isMenuActive;
+
 				break;
 
 			case 80: // RIGHT
@@ -57,8 +57,7 @@ int main() {
 				break;
 
 			case 75: // RIGHT
-				view.menuActive--;
-				if (view.menuActive < 0) view.menuActive = 0;
+				view.isMenuActive = !view.isMenuActive;
 				break;
 			}
 		}
