@@ -25,11 +25,11 @@ public:
 
 
 	enum Field {TITLE, PRICE, RATING, LEFTITEM, DESCRIPTION, BUTTON};
-	enum FilterFiled {SEARCH, SORT, FILTER };
 
+	enum FilterFiled {SEARCH, SORT, FILTER };
 	// ----- MENU ----- // 
 	
-
+	bool need_save = false;
 
 
 
@@ -46,8 +46,7 @@ public:
 
 	
 
-
-
+	bool isSearch = false;
 
 
 

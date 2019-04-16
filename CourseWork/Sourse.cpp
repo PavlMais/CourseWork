@@ -23,20 +23,20 @@ int main() {
 		key = _getch();
 		
 
+
+		if (view.need_save) {
+			db.save();
+			view.need_save = false;
+		}
+
 		if (view.isfieldEdit) {
-
-			
-
-
-
-
-
 			if(view.editField(key)) db.save();
 			continue;
 		}
 
-
-		if (key == 13) view.enter();
+		std::cout << key;
+		if (key == 102) view.isSearch = !view.isSearch;
+		else if (key == 13) view.enter();
 		
 
 
@@ -67,3 +67,15 @@ int main() {
 	system("pause");
 	return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+

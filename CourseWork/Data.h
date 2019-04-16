@@ -88,18 +88,14 @@ struct Data {
 		string str = "";
         str += std::to_string(usersSize) + "\n";
         
-        for(int a = 0; a < usersSize; a++){
-            str += users[a].toString() + "\n";
-        }
+        for(int a = 0; a < usersSize; a++) str += users[a].toString() + "\n";
+        
         
         str += std::to_string(productsSize) + "\n";
         
-        for(int i = 0; i < productsSize; i++){
-            str += products[i].toString() + "\n";   
-        }
+        for(int i = 0; i < productsSize; i++) str += products[i].toString() + "\n";   
+        
         return str;
-  
-		
 	}
 
 
@@ -112,11 +108,11 @@ struct Data {
 		{
 			newProducts[i] = products[i];
 		}
-
-
 		newProducts[productsSize] = new_product;
 
-		productsSize += 1;
+		//products = (Product *)realloc(products, productsSize * sizeof(Product) + 1);
+		//products[productsSize] = new_product;
+		//productsSize += 1;
 
 		delete[] products;
 

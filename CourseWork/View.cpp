@@ -11,66 +11,61 @@ View::View(Data* pdata)
 	data = pdata;
 }
 
-void View::enter()
-{
-
+void View::enter() {
 	if (isMenuActive) {
 		viewActive = menuSelect;
 		isMenuActive = false;
-	}
-	else {
+	} else {
 
 		switch (viewActive)
 		{
 		case LISTITEMS: viewActive = DETAILITEMS; break;
 		case DETAILITEMS:
 			if (filedItemSelect == BUTTON) {
+
 				viewActive = LISTITEMS;
-				// Save
+				need_save = true;
 			}
 			else {
-				std::cout << "EDITING!!!";
-
 				isfieldEdit = true;
 				editedField = data->products[itemsSelect].getValue(filedItemSelect);
 			}
+
 			break;
+
+		case ADDITEMS:
+			if (filedItemSelect == BUTTON) {
+				viewActive = LISTITEMS;
+				need_save = true;
+				data->addProduct();
+			}
+			else {
+				isfieldEdit = true;
+				editedField = data->new_product.getValue(filedItemSelect);
+			}
+
+			break;
+
 		default:
-			std::cout << "Error! ln 29";
+			std::cout << "Error! 1";
 			break;
 		}
-
 	}
-
-
-
-	
-
-
-
 }
 
-bool View::editField(int key)
-{
-	if (key == 8)
-	{
-		editedField = editedField.substr(0, editedField.size() - 1);
-	}
-	else if (key == 13)
-	{
-		switch (viewActive)
-		{
-		case DETAILITEMS: 
-			data->products[itemsSelect].setValue(filedItemSelect, editedField);
-			break;
-		default:
-			break;
+bool View::editField(int key){
+	if (key == 8) editedField = editedField.substr(0, editedField.size() - 1);
+	
+	else if (key == 13) {
+		switch (viewActive) {
+			case DETAILITEMS: 
+				data->products[itemsSelect].setValue(filedItemSelect, editedField);
+				break;
+			case ADDITEMS:
+				data->new_product.setValue(filedItemSelect, editedField);
+				break;
 		}
-
-
 		isfieldEdit = false;
-
-
 		return true;
 	}
 	else editedField += char(key);
@@ -80,46 +75,24 @@ bool View::editField(int key)
 
 void View::cursorUp(){
 	if (isMenuActive) menuSelect--;
-	else{
-		if (viewActive == 0) {
-			itemsSelect--;
-
-
+	else {
+		switch (viewActive) {
+			case LISTITEMS: itemsSelect--; break;
+			case DETAILITEMS: filedItemSelect--; break;
+			case ADDITEMS: filedItemSelect--; break;
 		}
-		else if (viewActive == 1) {
-			filedItemSelect--;
-
-		}
-		else if (viewActive == 2) {
-			filedItemSelect--;
-		}
-
-
 	}
-
-
-	
 }
+
 void View::cursorDown(){
 	if (isMenuActive) menuSelect++;
 	else {
-		if (viewActive == 0) {
-			itemsSelect++;
-
-
+		switch (viewActive) {
+			case LISTITEMS: itemsSelect++; break;
+			case DETAILITEMS: filedItemSelect++; break;
+			case ADDITEMS: filedItemSelect++; break;
 		}
-		else if (viewActive == 1) {
-			filedItemSelect++;
-
-		}
-		else if (viewActive == 2) {
-			filedItemSelect++;
-		}
-
-
 	}
-
-
 }
 
 
@@ -418,17 +391,42 @@ string View::bildItem(Product product) {
 string* View::bildListItems() {
 	static unsigned int offsetItems = 0;
 	string* view = new string[winSizeX];
-	view[0] = title("ID Name Price", viewSizeY);
+
+	int start, magic;
+	if (isSearch) {
+
+		view[1] = "Search:     Sort: None   ";
+
+
+
+		start = 3; magic = 3;
+	}
+	else {
+		start = 1; magic = 2;
+	}
+
+	
+	view[start - 1] = title("ID Name Price", viewSizeY);
+
+
+
+
+
+
+
+
+
+
 
 
 	if (itemsSelect < 0) itemsSelect = 0;// add ring ring
 	if (itemsSelect > data->productsSize - 1) itemsSelect = data->productsSize - 1;
 	
-	if (itemsSelect == winSizeX / 2 + offsetItems - 2) offsetItems++;
+	if (itemsSelect == winSizeX / 2 + offsetItems - magic) offsetItems++;
 	else if (itemsSelect == offsetItems && offsetItems != 0) offsetItems--;
 
 	
-	for (int VIter = 1, IIter = offsetItems; VIter < winSizeX - 1 && IIter < data->productsSize; VIter += 2, IIter++)
+	for (int VIter = start, IIter = offsetItems; VIter < winSizeX - 1 && IIter < data->productsSize; VIter += 2, IIter++)
 	{
 		if (IIter == itemsSelect && !isMenuActive) view[VIter] = topLine(viewSizeY);
 		else if (IIter == itemsSelect + 1 && !isMenuActive) view[VIter] = bottomLine(viewSizeY);
