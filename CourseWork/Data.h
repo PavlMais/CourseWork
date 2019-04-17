@@ -74,6 +74,21 @@ struct Company {
 	string name;
 
 };
+
+struct SortConfing {
+	enum SortBy { NONE = -1, ID, TITLE, PRICE };
+	bool  active = false;
+	int selected = -1;
+	int select = 0;
+	bool revers = false;
+
+
+	bool sortById(Product const& f, Product const& s) {
+		return f.id > f.id;
+	}
+	
+};
+
 struct Data {
 	Product* products;
 	Product new_product;
@@ -81,6 +96,7 @@ struct Data {
 	User* users;
 	int usersSize;
 	User userActive;
+
 	
 	
 	

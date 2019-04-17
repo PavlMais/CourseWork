@@ -15,7 +15,23 @@ void View::enter() {
 	if (isMenuActive) {
 		viewActive = menuActive = menuSelect;
 		isMenuActive = false;
-	} else {
+	}
+	else if (sortConf.active) {
+
+		if (sortConf.selected == sortConf.select) {
+
+			if (sortConf.revers) {
+				sortConf.selected = -1;
+				sortConf.revers = false;
+			} else
+				sortConf.revers = true;
+
+
+		} else sortConf.selected = sortConf.select;
+	
+	
+	}
+	else {
 
 		switch (viewActive)
 		{
@@ -74,7 +90,7 @@ bool View::editField(int key){
 }
 
 void View::cursorUp(){
-	if (isMenuActive) menuSelect--;
+    if (isMenuActive) menuSelect--;
 	else {
 		switch (viewActive) {
 			case LISTITEMS: itemsSelect--; break;
@@ -93,6 +109,16 @@ void View::cursorDown(){
 			case ADDITEMS: filedItemSelect++; break;
 		}
 	}
+}
+
+void View::cursorLeft(){
+	if(sortConf.active) sortConf.select++;
+	else isMenuActive = false;
+}
+
+void View::cursorRight(){
+	if (sortConf.active) sortConf.select--;
+	else isMenuActive = true;
 }
 
 
@@ -393,36 +419,15 @@ string* View::bildListItems() {
 	string* view = new string[winSizeX];
 
 	int start, magic;
-	if (isSearch) {
+	
+	topTitle(view, 0);
 
-		view[1] = "   Search:     Sort: None   ";
-		
-
-
-
-	}
-	else if (isSortActive) {
+	if (sortConf.active) {
 		start = 3; magic = 4;
-
-		topTitle(view, 0);
-
 	}
 	else {
 		start = 1; magic = 2;
-
-		view[start - 1] =" ID    Name               Price      Rating";
 	}
-
-	
-
-
-
-
-
-
-
-
-
 
 
 
@@ -455,123 +460,66 @@ string* View::bildListItems() {
 
 
 void View::topTitle(string* view, short select = -1) {
-	const unsigned short int widthItem = viewSizeY - 6;
-	/*const unsigned short int widthID = widthItem * 10 / 100;
-	const unsigned short int widthTitle = widthItem * 40 / 100;
-	const unsigned short int widthPrice = widthItem * 25 / 100;
-	const unsigned short int widthRating = widthItem * 25 / 100;*/
+	const unsigned short int widthItem = viewSizeY - 2 ;
 	int widthFieldTitles[4] = {
 		widthItem * 10 / 100,
 		widthItem * 40 / 100,
 		widthItem * 25 / 100,
 		widthItem * 25 / 100
 	};
-	
 	string filedTitle[4] = {
 		"ID",
 		"Title",
 		"Price",
 	};
-	switch (sortActive) {
+	if (sortConf.select > 2) sortConf.select = 2;
+	else if (sortConf.select < 0) sortConf.select = 0;
 
-	case IDUP:
-		filedTitle[0] += "^";
-		break;
-	case View::IDDOWN:
-		filedTitle[0] += "v";
-		break;
-
-	case View::TITLEUP:
-		filedTitle[1] += "^";
-		break;
-	case View::TITLEDOWN:
-		filedTitle[1] += "v";
-		break;
-
-	case View::PRICEUP:
-		filedTitle[2] += "^";
-		break;
-	case View::PRICEDOWN:
-		filedTitle[2] += "v";
-		break;
-	}
-
-	for (int i = 0; i < 4; i++)
-	{
-		if (i != sortSelect - 1 / 2) filedTitle[i] += " ";
-	}
-
-
-	view[0] = "";
-	view[1] = "";
-	view[2] = "";
+	if (sortConf.selected != -1) filedTitle[sortConf.selected] += (sortConf.revers) ? " v" : " ^";
 	
+	for (int i = 0; i < 4; i++) if(i != sortConf.selected) filedTitle[i] += "  ";
+
 	
-	
+	for (int i = 0; i < 4; i++) {
+
+		if (!sortConf.active) {
 
 
-	for (int i = 0; i < 4; i++)
-	{
+			view[0] += " " + adaptString(filedTitle[i], widthFieldTitles[i]);
 
-
-		if (sortSelect == i) {
-			view[0] += "<";
-			
-			view[1] += "|";
-			view[2] += "<";
+			continue;
 		}
-		else if (sortSelect == i - 1) {
-			view[0] += ">";
 
-			view[1] += "|";
-			view[2] += ">";
-		}
-		else {
-			view[0] +=" ";
-			view[1] +=" ";
-			view[2] +=" ";
+
+		if (sortConf.select == i) {
+			view[0] += char(218);
+			view[1] += char(179);
+			view[2] += char(192);
+		} else if (sortConf.select == i - 1) {
+			view[0] += char(191);
+			view[1] += char(179);
+			view[2] += char(217);
+		} else {
+			view[0] += " ";
+			view[1] += " ";
+			view[2] += " ";
 		}
 		
-		if (sortSelect == i) {
-			view[0] += "----";
-			view[1] += filedTitle[i];
-			view[2] += "----";
-		
-
-
-		}
-		else {
-			view[0] += "    ";
-			view[1] += filedTitle[i];
-			view[2] += "    ";
-
+		if (sortConf.select == i) {
+			view[0] += line(char(196), widthFieldTitles[i]);
+			view[1] += adaptString(filedTitle[i], widthFieldTitles[i]);
+			view[2] += line(char(196), widthFieldTitles[i]);;
+		} else {
+			view[0] += line(' ', widthFieldTitles[i]);
+			view[1] += adaptString(filedTitle[i], widthFieldTitles[i]);
+			view[2] += line(' ', widthFieldTitles[i]);;
 		}
 
 
 
 
-
-
-
-
-
-		/*if (sortSelect == i) {
-
-			view[0] += topLine(widthFieldTitles[i] + 2);
-
-			view[1] += char(179) + adaptString(filedTitle[i], widthFieldTitles[i] - 1) + char(187);
-			view[2] += bottomLine(widthFieldTitles[i] + 2);
-		}
-		else {
-
-			for (int _ = 0; _ < widthFieldTitles[i] + 1; _++) view[0] += " ";
-			
-			view[1] += " " + adaptString(filedTitle[i], widthFieldTitles[i]);
-
-			for (int _ = 0; _ < widthFieldTitles[i] + 1; _++) view[2] += " ";
-
-		}*/
-		
 	}
+	
+
 }
 

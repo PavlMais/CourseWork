@@ -2,6 +2,7 @@
 #include <conio.h>
 #include "DataBase.h"
 #include "View.h"
+#include "utils.h"
 
 
 int main() {
@@ -35,31 +36,35 @@ int main() {
 		}
 
 		std::cout << key;
-		if (key == 102) view.isSortActive = !view.isSortActive;
+		if (key == 102) {
+			if (view.sortConf.active) {
+				// sort data
+
+				
+				sortProducts(view.data->products,view.data->productsSize, view.sortConf);
+				
+
+				view.sortConf.active = false;
+			}
+			else {
+				view.sortConf.active = true;
+			}
+		
+
+		}
 		else if (key == 13) view.enter();
 		
 
 
 		else if (key == 224) {
 			switch (_getch()){
-			case 72: // UP
-				view.cursorUp();
-				break;
+			case 72: view.cursorUp(); break;
 
-			case 77: // LEFT
-				view.sortSelect--;
-				//view.isMenuActive = !view.isMenuActive;
+			case 77: view.cursorLeft(); break;
 
-				break;
+			case 80: view.cursorDown(); break;
 
-			case 80: // RIGHT
-				view.cursorDown();
-				break;
-
-			case 75: // RIGHT
-				view.sortSelect++;
-				//view.isMenuActive = !view.isMenuActive;
-				break;
+			case 75: view.cursorRight(); break;
 			}
 		}
 	}

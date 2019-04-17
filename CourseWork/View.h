@@ -13,7 +13,6 @@ public:
 	View(Data* data);
 	string editedField = "";
 	
-	//enum Field { TITLE, PRICE, RATING, LEFTITEM, DESCRIPTION, BUTTON };
 
 
 	bool isfieldEdit = false;
@@ -27,7 +26,6 @@ public:
 	enum Field {TITLE, PRICE, RATING, LEFTITEM, DESCRIPTION, BUTTON};
 
 	enum FilterFiled {SEARCH, SORT, FILTER };
-	// ----- MENU ----- // 
 	
 	bool need_save = false;
 
@@ -36,9 +34,7 @@ public:
 	int viewActive = LISTITEMS;
 	enum ViewActive {LISTITEMS, ADDITEMS, DETAILITEMS	};
 
-	enum SortBy {NONE, IDUP, IDDOWN, TITLEUP, TITLEDOWN, PRICEUP, PRICEDOWN};
-	int sortActive = 2;
-	int sortSelect = 0;
+	
 
 	bool isMenuActive = false;
 
@@ -48,9 +44,8 @@ public:
 
 	
 
+	SortConfing sortConf;
 	bool isSearch = false;
-	bool isSortActive = false;
-
 
 
 	int itemsSelect = 0;
@@ -58,6 +53,8 @@ public:
 	
 	void cursorUp();
 	void cursorDown();
+	void cursorLeft();
+	void cursorRight();
 
 	void enter();
 	bool editField(int key);
@@ -72,9 +69,9 @@ public:
 	
 
 
-
-
 private:
+
+
 	User activeUser;
 
 	unsigned int winSizeX = 20;
