@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <conio.h>
 #include <string>
 #include "View.h"
@@ -13,7 +13,7 @@ View::View(Data* pdata)
 
 void View::enter() {
 	if (isMenuActive) {
-		viewActive = menuSelect;
+		viewActive = menuActive = menuSelect;
 		isMenuActive = false;
 	} else {
 
@@ -107,7 +107,7 @@ void View::render() {
 	
 	//std::cout << "Menu size: " << menuSizeY << "  View size: " << viewSizeY << "  Sub view size: " << subViewSizeY;
 	
-	std::cout << "Menu active: " << isMenuActive << " ViewActive: " << viewActive << "\n";
+	//std::cout << "Menu active: " << isMenuActive << " ViewActive: " << viewActive << "\n";
 	
 
 	
@@ -179,7 +179,7 @@ string View::title(string title, int size) {
 	for (int i = 0; i < size + 1; i++)
 	{
 		if (i == size / 2) str += title;
-		else str += "-";
+		else str += " ";
 	}
 	//std::cout << "txtSize: " << str.size() << "\n";
 	return str;
@@ -395,18 +395,25 @@ string* View::bildListItems() {
 	int start, magic;
 	if (isSearch) {
 
-		view[1] = "Search:     Sort: None   ";
+		view[1] = "   Search:     Sort: None   ";
+		
 
 
 
-		start = 3; magic = 3;
+	}
+	else if (isSortActive) {
+		start = 3; magic = 4;
+
+		topTitle(view, 0);
+
 	}
 	else {
 		start = 1; magic = 2;
+
+		view[start - 1] =" ID    Name               Price      Rating";
 	}
 
 	
-	view[start - 1] = title("ID Name Price", viewSizeY);
 
 
 
@@ -425,22 +432,21 @@ string* View::bildListItems() {
 	if (itemsSelect == winSizeX / 2 + offsetItems - magic) offsetItems++;
 	else if (itemsSelect == offsetItems && offsetItems != 0) offsetItems--;
 
-	
-	for (int VIter = start, IIter = offsetItems; VIter < winSizeX - 1 && IIter < data->productsSize; VIter += 2, IIter++)
+	int vIter = start;
+	for (int IIter = offsetItems; vIter < winSizeX - 1 && IIter < data->productsSize; vIter += 2, IIter++)
 	{
-		if (IIter == itemsSelect && !isMenuActive) view[VIter] = topLine(viewSizeY);
-		else if (IIter == itemsSelect + 1 && !isMenuActive) view[VIter] = bottomLine(viewSizeY);
-		else for (int i = 0; i < viewSizeY; i++) view[VIter] += " ";
+		if      (IIter == itemsSelect && !isMenuActive)     view[vIter] = topLine(viewSizeY);
+		else if (IIter == itemsSelect + 1 && !isMenuActive) view[vIter] = bottomLine(viewSizeY);
+		else for (int i = 0; i < viewSizeY; i++)            view[vIter] += " ";
 		
 
-
 		if(IIter == itemsSelect && !isMenuActive)
-			view[VIter + 1] = char(179) + bildItem(data->products[IIter]) + char(179);
+			view[vIter + 1] = char(179) + bildItem(data->products[IIter]) + char(179);
 		else
-			view[VIter + 1] = " "+ bildItem(data->products[IIter]) + " ";
+			view[vIter + 1] = " "+ bildItem(data->products[IIter]) + " ";
 
-		if (itemsSelect == data->productsSize - 1 && !isMenuActive) view[VIter + 2] = bottomLine(viewSizeY);
 	}
+	if (itemsSelect == data->productsSize - 1 && !isMenuActive) view[vIter] = bottomLine(viewSizeY);
 	return view;
 }
 
@@ -448,5 +454,124 @@ string* View::bildListItems() {
 
 
 
+void View::topTitle(string* view, short select = -1) {
+	const unsigned short int widthItem = viewSizeY - 6;
+	/*const unsigned short int widthID = widthItem * 10 / 100;
+	const unsigned short int widthTitle = widthItem * 40 / 100;
+	const unsigned short int widthPrice = widthItem * 25 / 100;
+	const unsigned short int widthRating = widthItem * 25 / 100;*/
+	int widthFieldTitles[4] = {
+		widthItem * 10 / 100,
+		widthItem * 40 / 100,
+		widthItem * 25 / 100,
+		widthItem * 25 / 100
+	};
+	
+	string filedTitle[4] = {
+		"ID",
+		"Title",
+		"Price",
+	};
+	switch (sortActive) {
 
+	case IDUP:
+		filedTitle[0] += "^";
+		break;
+	case View::IDDOWN:
+		filedTitle[0] += "v";
+		break;
+
+	case View::TITLEUP:
+		filedTitle[1] += "^";
+		break;
+	case View::TITLEDOWN:
+		filedTitle[1] += "v";
+		break;
+
+	case View::PRICEUP:
+		filedTitle[2] += "^";
+		break;
+	case View::PRICEDOWN:
+		filedTitle[2] += "v";
+		break;
+	}
+
+	for (int i = 0; i < 4; i++)
+	{
+		if (i != sortSelect - 1 / 2) filedTitle[i] += " ";
+	}
+
+
+	view[0] = "";
+	view[1] = "";
+	view[2] = "";
+	
+	
+	
+
+
+	for (int i = 0; i < 4; i++)
+	{
+
+
+		if (sortSelect == i) {
+			view[0] += "<";
+			
+			view[1] += "|";
+			view[2] += "<";
+		}
+		else if (sortSelect == i - 1) {
+			view[0] += ">";
+
+			view[1] += "|";
+			view[2] += ">";
+		}
+		else {
+			view[0] +=" ";
+			view[1] +=" ";
+			view[2] +=" ";
+		}
+		
+		if (sortSelect == i) {
+			view[0] += "----";
+			view[1] += filedTitle[i];
+			view[2] += "----";
+		
+
+
+		}
+		else {
+			view[0] += "    ";
+			view[1] += filedTitle[i];
+			view[2] += "    ";
+
+		}
+
+
+
+
+
+
+
+
+
+		/*if (sortSelect == i) {
+
+			view[0] += topLine(widthFieldTitles[i] + 2);
+
+			view[1] += char(179) + adaptString(filedTitle[i], widthFieldTitles[i] - 1) + char(187);
+			view[2] += bottomLine(widthFieldTitles[i] + 2);
+		}
+		else {
+
+			for (int _ = 0; _ < widthFieldTitles[i] + 1; _++) view[0] += " ";
+			
+			view[1] += " " + adaptString(filedTitle[i], widthFieldTitles[i]);
+
+			for (int _ = 0; _ < widthFieldTitles[i] + 1; _++) view[2] += " ";
+
+		}*/
+		
+	}
+}
 

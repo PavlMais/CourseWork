@@ -11,8 +11,9 @@ std::string floatNormalize(float fi)
 
 
 std::string adaptString(std::string str, int size) {
-
+	//std::cout << str.size() << " " << size << " | ";
 	if (str.size() > size) str = str.substr(0, size - 2) + "..";
-	else  for (unsigned int i = str.size(); i < size; i++) str += " ";	
+	else  for (unsigned int i = str.size(); i < size; i++) str += " ";
+	//std::cout << str.size() << " == ";
 	return str;
 }

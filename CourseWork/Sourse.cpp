@@ -35,7 +35,7 @@ int main() {
 		}
 
 		std::cout << key;
-		if (key == 102) view.isSearch = !view.isSearch;
+		if (key == 102) view.isSortActive = !view.isSortActive;
 		else if (key == 13) view.enter();
 		
 
@@ -47,8 +47,8 @@ int main() {
 				break;
 
 			case 77: // LEFT
-				
-				view.isMenuActive = !view.isMenuActive;
+				view.sortSelect--;
+				//view.isMenuActive = !view.isMenuActive;
 
 				break;
 
@@ -57,7 +57,8 @@ int main() {
 				break;
 
 			case 75: // RIGHT
-				view.isMenuActive = !view.isMenuActive;
+				view.sortSelect++;
+				//view.isMenuActive = !view.isMenuActive;
 				break;
 			}
 		}

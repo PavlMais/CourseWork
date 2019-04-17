@@ -36,7 +36,9 @@ public:
 	int viewActive = LISTITEMS;
 	enum ViewActive {LISTITEMS, ADDITEMS, DETAILITEMS	};
 
-	
+	enum SortBy {NONE, IDUP, IDDOWN, TITLEUP, TITLEDOWN, PRICEUP, PRICEDOWN};
+	int sortActive = 2;
+	int sortSelect = 0;
 
 	bool isMenuActive = false;
 
@@ -47,6 +49,7 @@ public:
 	
 
 	bool isSearch = false;
+	bool isSortActive = false;
 
 
 
@@ -90,6 +93,7 @@ private:
 	string* bildAdd();
 	string* bildSearch();
 	string* bildListItems();
+	void topTitle(string * arr, short select);
 	string* bildSubView();
 
 	string getFilterField(int key);
