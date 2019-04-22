@@ -10,10 +10,6 @@ public:
 
 	void save();
 
-	
-
-
-	
 	~DataBase();
 	
 private:

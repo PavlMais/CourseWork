@@ -82,11 +82,6 @@ struct SortConfing {
 	int select = 0;
 	bool revers = false;
 
-
-	bool sortById(Product const& f, Product const& s) {
-		return f.id > f.id;
-	}
-	
 };
 
 struct Data {

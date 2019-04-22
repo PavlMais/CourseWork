@@ -4,6 +4,11 @@
 #include "View.h"
 #include "utils.h"
 
+
+//#define DEBAGON
+
+
+
 using std::string;
 
 View::View(Data* pdata)
@@ -30,15 +35,12 @@ void View::enter() {
 		} else sortConf.selected = sortConf.select;
 	
 	
-	}
-	else {
+	} else {
 
-		switch (viewActive)
-		{
+		switch (viewActive) {
 		case LISTITEMS: viewActive = DETAILITEMS; break;
 		case DETAILITEMS:
 			if (filedItemSelect == BUTTON) {
-
 				viewActive = LISTITEMS;
 				need_save = true;
 			}
@@ -46,7 +48,6 @@ void View::enter() {
 				isfieldEdit = true;
 				editedField = data->products[itemsSelect].getValue(filedItemSelect);
 			}
-
 			break;
 
 		case ADDITEMS:
@@ -124,17 +125,18 @@ void View::cursorRight(){
 
 void View::render() {
 
-	system("cls");// Move to bottom
 
 	string *bMenu = bildMenu();
 
 	string *view = nullptr;
 
+	#ifdef DEBAGON
+		system("cls");// Move to bottom
+		std::cout << "Menu size: " << menuSizeY << "  View size: " << viewSizeY << "  Sub view size: " << subViewSizeY;
 	
-	//std::cout << "Menu size: " << menuSizeY << "  View size: " << viewSizeY << "  Sub view size: " << subViewSizeY;
+		std::cout << "Menu active: " << isMenuActive << " ViewActive: " << viewActive << "\n";
 	
-	//std::cout << "Menu active: " << isMenuActive << " ViewActive: " << viewActive << "\n";
-	
+	#endif
 
 	
 	switch (viewActive) {
@@ -147,12 +149,13 @@ void View::render() {
 			break;
 	}
 
-
-
-
-
 	string buffer;
 	for (int i = 0; i < winSizeX; i++) buffer += bMenu[i] + view[i] +"\n";
+
+	#ifndef DEBAGON
+		system("cls");
+	#endif	
+
 	std::cout << buffer;
 }
 
@@ -294,9 +297,9 @@ string* View::bildMenu() {
 
 	for (unsigned int _ = 0; _ < menuSizeY + 2; _++) menu[0] += " ";
 	menu[0] += char(179);
-
-	//std::cout << "M sel:"<<isMenuActive << " M act:" << viewFocus << " M cur:" <<menuSelect <<   "\n";
-
+#ifdef DEBAGON
+	std::cout << "M sel:"<<isMenuActive << " M act:" << viewFocus << " M cur:" <<menuSelect <<   "\n";
+#endif
 	if (menuSelect < 0) menuSelect = menuCount - 1;
 	else if (menuSelect >= menuCount) menuSelect = 0;
 
@@ -456,9 +459,6 @@ string* View::bildListItems() {
 }
 
 
-
-
-
 void View::topTitle(string* view, short select = -1) {
 	const unsigned short int widthItem = viewSizeY - 2 ;
 	int widthFieldTitles[4] = {
@@ -483,10 +483,7 @@ void View::topTitle(string* view, short select = -1) {
 	for (int i = 0; i < 4; i++) {
 
 		if (!sortConf.active) {
-
-
 			view[0] += " " + adaptString(filedTitle[i], widthFieldTitles[i]);
-
 			continue;
 		}
 
@@ -514,12 +511,6 @@ void View::topTitle(string* view, short select = -1) {
 			view[1] += adaptString(filedTitle[i], widthFieldTitles[i]);
 			view[2] += line(' ', widthFieldTitles[i]);;
 		}
-
-
-
-
 	}
-	
-
 }
 

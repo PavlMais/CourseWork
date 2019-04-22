@@ -1,11 +1,16 @@
 #include <iostream>
 #include <conio.h>
+
 #include "DataBase.h"
 #include "View.h"
 #include "utils.h"
 
 
+
+
 int main() {
+
+
 	
 	DataBase db;
 
@@ -25,9 +30,9 @@ int main() {
 		
 
 
-		if (view.need_save) {
-			db.save();
-			view.need_save = false;
+		if (view.need_save) { 
+			db.save(); 
+			view.need_save = false; 
 		}
 
 		if (view.isfieldEdit) {
@@ -35,27 +40,16 @@ int main() {
 			continue;
 		}
 
-		std::cout << key;
-		if (key == 102) {
-			if (view.sortConf.active) {
-				// sort data
-
-				
-				sortProducts(view.data->products,view.data->productsSize, view.sortConf);
-				
-
-				view.sortConf.active = false;
-			}
-			else {
-				view.sortConf.active = true;
-			}
 		
+		if (key == 102) {
+			if (view.sortConf.active) 
+				sorting(view.data->products, view.data->productsSize, view.sortConf);
 
+			view.sortConf.active = !view.sortConf.active;
+		
 		}
 		else if (key == 13) view.enter();
 		
-
-
 		else if (key == 224) {
 			switch (_getch()){
 			case 72: view.cursorUp(); break;
