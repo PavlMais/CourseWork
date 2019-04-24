@@ -72,17 +72,26 @@ void View::enter() {
 
 bool View::editField(int key){
 	if (key == 8) editedField = editedField.substr(0, editedField.size() - 1);
+	else if (key == 27) {
 	
+		switch (viewActive) {
+		case LISTITEMS:
+			search = editedField;
+			isSearchActive = false;
+			break;
+
+		case DETAILITEMS:break;
+		case ADDITEMS: break;
+		}
+		isfieldEdit = false;
+	}
 	else if (key == 13) {
 		switch (viewActive) {
 			case LISTITEMS:
 				search = editedField;
 				isSearchActive = false;
 				
-
-				// Search
-
-				//searchByTitle(search, data->products, data->productsSize);
+				searchByTitle(data->ids_products, &data->ids_size, search, data->products, data->productsSize);
 
 				break;
 			case DETAILITEMS: 
@@ -447,16 +456,16 @@ string* View::bildListItems() {
 		start += 1; magic = 2;
 	}
 
-
+	
 
 	if (itemsSelect < 0) itemsSelect = 0;// add ring ring
-	if (itemsSelect > data->productsSize - 1) itemsSelect = data->productsSize - 1;
+	if (itemsSelect > data->ids_size - 1) itemsSelect = data->ids_size - 1;
 	
 	if (itemsSelect == winSizeX / 2 + offsetItems - magic) offsetItems++;
 	else if (itemsSelect == offsetItems && offsetItems != 0) offsetItems--;
 
 	int vIter = start;
-	for (int IIter = offsetItems; vIter < winSizeX - 1 && IIter < data->productsSize; vIter += 2, IIter++)
+	for (int IIter = offsetItems; vIter < winSizeX - 1 && IIter < data->ids_size; vIter += 2, IIter++)
 	{
 		if      (IIter == itemsSelect && !isMenuActive)     view[vIter] = topLine(viewSizeY);
 		else if (IIter == itemsSelect + 1 && !isMenuActive) view[vIter] = bottomLine(viewSizeY);
@@ -469,7 +478,7 @@ string* View::bildListItems() {
 			view[vIter + 1] = " "+ bildItem(data->products[data->ids_products[IIter]]) + " ";
 
 	}
-	if (itemsSelect == data->productsSize - 1 && !isMenuActive) view[vIter] = bottomLine(viewSizeY);
+	if (itemsSelect == data->ids_size - 1 && !isMenuActive) view[vIter] = bottomLine(viewSizeY);
 	return view;
 }
 

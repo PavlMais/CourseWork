@@ -2,6 +2,7 @@
 #include <iostream>
 #include <windows.h>
 #include <algorithm>
+#include <locale> 
 
 #include "utils.h"
 #include "data.h"
@@ -60,15 +61,30 @@ std::string line(char ch, int size) {
 
 }
 
-int* searchByTitle(std::string str, Product* prds, int prsSize) {
-	int* ids_items = new int[prsSize];
+int* searchByTitle(int* ids_items,int* ids_size, std::string str, Product* prds, int prsSize) {
+	
+	for (int i = 0; i < prsSize; i++) ids_items[i] = 1;
 
+	
+	std::locale loc;
+	
+	std::cout << str << "\n";
+	for (int i = 0; i < str.size(); i++)
+	{
+		str[i] = std::tolower(str[i], loc);
+	}
 
+	std::cout << " > " << str << "\n";
+
+	Sleep(2000);
+	*ids_size = 0;
 	for (int i = 0,n = 0; i < prsSize; i++)
 	{
+	
 		if (prds[i].name.find(str, 0) != std::string::npos) {
 			ids_items[n] = i;
 			n++;
+			*ids_size += 1;
 		}
 	}
 		

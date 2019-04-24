@@ -25,7 +25,6 @@ int main() {
 		view.render();
 		key = _getch();
 		
-
 		if (view.need_save) { 
 			db.save(); 
 			view.need_save = false; 

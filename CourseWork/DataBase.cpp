@@ -51,8 +51,8 @@ Data* DataBase::getData(){
 	for (int i = 0; getline(file, buffer); i++){
 		dataN->products[i] = parse_product(buffer);
 	}
-
-	dataN->ids_products = new int[dataN->productsSize];
+	dataN->ids_size = dataN->productsSize;
+	dataN->ids_products = new int[dataN->ids_size];
 
 	file.close();
 
