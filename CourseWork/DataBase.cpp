@@ -52,7 +52,15 @@ Data* DataBase::getData(){
 		dataN->products[i] = parse_product(buffer);
 	}
 
+	dataN->ids_products = new int[dataN->productsSize];
+
 	file.close();
+
+
+
+	for (int i = 0; i < dataN->productsSize; i++) dataN->ids_products[i] = i;
+	
+	
 	data = dataN;
 	return dataN;
 }

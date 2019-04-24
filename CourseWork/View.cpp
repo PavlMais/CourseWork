@@ -75,6 +75,16 @@ bool View::editField(int key){
 	
 	else if (key == 13) {
 		switch (viewActive) {
+			case LISTITEMS:
+				search = editedField;
+				isSearchActive = false;
+				
+
+				// Search
+
+				//searchByTitle(search, data->products, data->productsSize);
+
+				break;
 			case DETAILITEMS: 
 				data->products[itemsSelect].setValue(filedItemSelect, editedField);
 				break;
@@ -422,14 +432,19 @@ string* View::bildListItems() {
 	string* view = new string[winSizeX];
 
 	int start, magic;
-	
-	topTitle(view, 0);
+	if (isSearch) {
+		bildSearch(view);
+		start = 2;
+	} else start = 0;
+
+
+	topTitle(view, start);
 
 	if (sortConf.active) {
-		start = 3; magic = 4;
+		start += 3; magic = 4;
 	}
 	else {
-		start = 1; magic = 2;
+		start += 1; magic = 2;
 	}
 
 
@@ -449,9 +464,9 @@ string* View::bildListItems() {
 		
 
 		if(IIter == itemsSelect && !isMenuActive)
-			view[vIter + 1] = char(179) + bildItem(data->products[IIter]) + char(179);
+			view[vIter + 1] = char(179) + bildItem(data->products[data->ids_products[IIter]]) + char(179);
 		else
-			view[vIter + 1] = " "+ bildItem(data->products[IIter]) + " ";
+			view[vIter + 1] = " "+ bildItem(data->products[data->ids_products[IIter]]) + " ";
 
 	}
 	if (itemsSelect == data->productsSize - 1 && !isMenuActive) view[vIter] = bottomLine(viewSizeY);
@@ -459,7 +474,7 @@ string* View::bildListItems() {
 }
 
 
-void View::topTitle(string* view, short select = -1) {
+void View::topTitle(string* view, short start) {
 	const unsigned short int widthItem = viewSizeY - 2 ;
 	int widthFieldTitles[4] = {
 		widthItem * 10 / 100,
@@ -483,34 +498,52 @@ void View::topTitle(string* view, short select = -1) {
 	for (int i = 0; i < 4; i++) {
 
 		if (!sortConf.active) {
-			view[0] += " " + adaptString(filedTitle[i], widthFieldTitles[i]);
+			view[start] += " " + adaptString(filedTitle[i], widthFieldTitles[i]);
 			continue;
 		}
 
 
 		if (sortConf.select == i) {
-			view[0] += char(218);
-			view[1] += char(179);
-			view[2] += char(192);
+			view[start]     += char(218);
+			view[start + 1] += char(179);
+			view[start + 2] += char(192);
 		} else if (sortConf.select == i - 1) {
-			view[0] += char(191);
-			view[1] += char(179);
-			view[2] += char(217);
+			view[start] += char(191);
+			view[start + 1] += char(179);
+			view[start + 2] += char(217);
 		} else {
-			view[0] += " ";
-			view[1] += " ";
-			view[2] += " ";
+			view[start] += " ";
+			view[start + 1] += " ";
+			view[start + 2] += " ";
 		}
 		
 		if (sortConf.select == i) {
-			view[0] += line(char(196), widthFieldTitles[i]);
-			view[1] += adaptString(filedTitle[i], widthFieldTitles[i]);
-			view[2] += line(char(196), widthFieldTitles[i]);;
+			view[start] += line(char(196), widthFieldTitles[i]);
+			view[start + 1] += adaptString(filedTitle[i], widthFieldTitles[i]);
+			view[start + 2] += line(char(196), widthFieldTitles[i]);;
 		} else {
-			view[0] += line(' ', widthFieldTitles[i]);
-			view[1] += adaptString(filedTitle[i], widthFieldTitles[i]);
-			view[2] += line(' ', widthFieldTitles[i]);;
+			view[start] += line(' ', widthFieldTitles[i]);
+			view[start + 1] += adaptString(filedTitle[i], widthFieldTitles[i]);
+			view[start + 2] += line(' ', widthFieldTitles[i]);;
 		}
 	}
+}
+
+void View::bildSearch(string* view) {
+
+
+	if (isSearchActive) {
+		view[0] = char(186);
+		view[0] += "   Search: " + editedField;
+		view[1] += char(200);
+		for (int i = 0; i < viewSizeY - 2; i++) view[1] += char(205);
+		view[1] += char(188);
+	}
+	else {
+		
+		view[0] = "|   Search: " + search;
+		view[1] = bottomLine(viewSizeY);
+	}
+
 }
 

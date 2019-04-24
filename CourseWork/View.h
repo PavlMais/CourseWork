@@ -12,7 +12,6 @@ class View
 public:
 	View(Data* data);
 	string editedField = "";
-	
 
 
 	bool isfieldEdit = false;
@@ -41,11 +40,13 @@ public:
 	int menuSelect = 0;
 	int menuActive = 0;
 
-
 	
 
 	SortConfing sortConf;
+
+	string search = "";
 	bool isSearch = false;
+	bool isSearchActive = false;
 
 
 	int itemsSelect = 0;
@@ -88,9 +89,10 @@ private:
 	string* bildMenu();
 
 	string* bildAdd();
-	string* bildSearch();
+	void bildSearch(string*);
 	string* bildListItems();
 	void topTitle(string * arr, short select);
+	void bildSearch(string * view, int start);
 	string* bildSubView();
 
 	string getFilterField(int key);

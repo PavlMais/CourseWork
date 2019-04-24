@@ -86,8 +86,12 @@ struct SortConfing {
 
 struct Data {
 	Product* products;
-	Product new_product;
 	int productsSize;
+
+	int* ids_products;
+	int ids_size;
+
+	Product new_product;
 	User* users;
 	int usersSize;
 	User userActive;

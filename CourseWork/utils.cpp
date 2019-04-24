@@ -43,6 +43,9 @@ void sorting(Product* prs, int const prsSize, SortConfing sortConf) {
 }
 
 
+//   int*
+
+
 
 std::string adaptString(std::string str, int size) {
 	if (str.size() > size) str = str.substr(0, size - 2) + "..";
@@ -54,4 +57,21 @@ std::string line(char ch, int size) {
 	string str;
 	for (int i = 0; i < size; i++) str += ch;
 	return str;
+
+}
+
+int* searchByTitle(std::string str, Product* prds, int prsSize) {
+	int* ids_items = new int[prsSize];
+
+
+	for (int i = 0,n = 0; i < prsSize; i++)
+	{
+		if (prds[i].name.find(str, 0) != std::string::npos) {
+			ids_items[n] = i;
+			n++;
+		}
+	}
+		
+	return ids_items;
+	
 }
