@@ -91,10 +91,10 @@ Product DataBase::parse_product(string data) {
 	int indx6 = data.find("[l]") + 3;
 	int indx7 = data.find("[r]") + 3;
 	int indx8 = data.find("[d]") + 3;
-	int indx9 = data.find("[c]") + 3;
+	int indx9 = data.find("[c]") + 3;// <  + 3
 	Product product;
 
-	product.id       = stoi(data.substr(0, indx1 - 3));
+	product.id       = stoi(data.substr(0, indx1 - 3));// <  - 3   WHY?
 	product.type     = data.substr(indx1, indx2 - indx1 - 3);
 	product.name     = data.substr(indx2, indx3 - indx2 - 3);
 	product.price    = stof(data.substr(indx3, indx4 - indx3 - 3));

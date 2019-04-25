@@ -2,6 +2,7 @@
 
 
 #include <string>
+
 using std::string;
 
 struct User {
@@ -24,10 +25,11 @@ struct Product {
 	string description;
 	int id_company;
 
-	enum Field {TITLE, PRICE, RATING, LEFTITEM, DESCRIPTION};
+	enum Field {ID, TITLE, PRICE, RATING, LEFTITEM, DESCRIPTION};
 
 	string getValue(int field) {
 		switch (field) {
+		case Field::ID: return std::to_string(id);
 		case Field::TITLE: return name;
 		case Field::PRICE: return std::to_string(price);
 		case Field::RATING: return std::to_string(rating);
@@ -98,7 +100,6 @@ struct Data {
 
 	
 	
-	
 	string toString(){
 		string str = "";
         str += std::to_string(usersSize) + "\n";
@@ -112,8 +113,6 @@ struct Data {
         
         return str;
 	}
-
-
 
 	void addProduct()
 	{
@@ -135,5 +134,4 @@ struct Data {
 		newProducts = nullptr;
 
 	}
-
 };

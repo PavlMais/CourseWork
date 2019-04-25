@@ -7,12 +7,9 @@
 
 //#define DEBAGON
 
-
-
 using std::string;
 
-View::View(Data* pdata)
-{
+View::View(Data* pdata){
 	data = pdata;
 }
 
@@ -75,13 +72,11 @@ bool View::editField(int key){
 	else if (key == 27) {
 	
 		switch (viewActive) {
-		case LISTITEMS:
-			search = editedField;
-			isSearchActive = false;
-			break;
-
-		case DETAILITEMS:break;
-		case ADDITEMS: break;
+			case LISTITEMS:
+				search = editedField;
+				isSearchActive = false;
+				isSearch = false;
+				break;
 		}
 		isfieldEdit = false;
 	}
@@ -149,8 +144,8 @@ void View::render() {
 
 	string *view = nullptr;
 
-	#ifdef DEBAGON
 		system("cls");// Move to bottom
+	#ifdef DEBAGON
 		std::cout << "Menu size: " << menuSizeY << "  View size: " << viewSizeY << "  Sub view size: " << subViewSizeY;
 	
 		std::cout << "Menu active: " << isMenuActive << " ViewActive: " << viewActive << "\n";
@@ -171,7 +166,7 @@ void View::render() {
 	string buffer;
 	for (int i = 0; i < winSizeX; i++) buffer += bMenu[i] + view[i] +"\n";
 
-	#ifndef DEBAGON
+	#ifdef DEBAGON
 		system("cls");
 	#endif	
 
@@ -179,10 +174,8 @@ void View::render() {
 }
 
 string* View::bildDetailItem(Product product) {
-	const unsigned short int FIELDSSIZE = 6;
-	string FIELDS[FIELDSSIZE] = { "Title", "Price", "Rating","Left item", "Description"};
 
-	FIELDS[5] = (viewActive == 2) ? "Back" : "Save";
+	//FIELDS[5] = (viewActive == 2) ? "Back" : "Save";
 	string *view = new string[winSizeX];
 
 	view[0] = title("View", viewSizeY);
@@ -190,63 +183,49 @@ string* View::bildDetailItem(Product product) {
 	
 
 
-	for (int i = 5, n = 0; i < FIELDSSIZE * 2 + 8; n++, i += 2)
+	for (int i = 5, n = 0; i < ALLFILEDS * 2 + 8; n++, i += 2)
 	{
 		if (filedItemSelect == n && !isMenuActive) view[i] = topLine(viewSizeY);
 		else if (filedItemSelect == n - 1 && !isMenuActive)  view[i] = bottomLine(viewSizeY);
 		else view[i] = "";
 		
 
-		if (n == FIELDSSIZE - 1 && !isMenuActive) { // for button
-			if (filedItemSelect == n) view[i + 1] = "\t "+ FIELDS[FIELDSSIZE - 1];
-			else view[i + 1] = "\t "+ FIELDS[FIELDSSIZE - 1];
+		if (n == ALLFILEDS - 1 && !isMenuActive) { // for button
+			if (filedItemSelect == n) view[i + 1] = "\t >Button";
+			else view[i + 1] = "\t Button";
 		}
 
 		else if (filedItemSelect == n && isfieldEdit) {
 
 			i++;
 			view[i] = "\t Edit mode:";
-			view[i + 1] = "\t " + FIELDS[n] + ": " + editedField;
+			view[i + 1] = "\t " + fieldNames[n] + ": " + editedField;
 			i++;
 		}
 		else if (filedItemSelect == n && !isMenuActive) {
 
-			view[i + 1] = "\t " + FIELDS[n] + ": " + product.getValue(n);
+			view[i + 1] = "\t " + fieldNames[n] + ": " + product.getValue(n);
 		}
-		else if (n < FIELDSSIZE){
-			view[i + 1] = "\t " + FIELDS[n] + ": " + product.getValue(n);
+		else if (n < ALLFILEDS){
+			view[i + 1] = "\t " + fieldNames[n] + ": " + product.getValue(n);
 		}
 	}
 	return view;
 	
 }
 string View::title(string title, int size) {
-	//std::cout << "txtSize: " << title.size() << " size: " << size;
-	string str;
-	size = size - title.size(); // TODO: ReWrite
-	for (int i = 0; i < size + 1; i++)
-	{
-		if (i == size / 2) str += title;
-		else str += " ";
-	}
-	//std::cout << "txtSize: " << str.size() << "\n";
-	return str;
+	size -= title.size();
+	int sl = (size % 2 != 0) ? size + 1 : size;
+
+	return line(' ', sl / 2) + title + line(' ', size / 2);
 }
 string View::topLine(int size)
 {
-	string str;
-	str = char(218);
-	for (unsigned int j = 0; j < size - 2; j++) str += char(196);
-	str += char(191);
-	return str;
+	return char(218) + line(char(196), size - 2) + char(191);
 }
 string View::bottomLine(int size)
 {
-	string str;
-	str = char(192);
-	for (unsigned int j = 0; j < size - 2; j++) str += char(196);
-	str += char(217);
-	return str;
+	return char(192) + line(char(196), size - 2) + char(217);	
 }
 
 bool View::login(){
@@ -282,8 +261,8 @@ bool View::login(){
 		while (true)
 		{
 			std::cout << "\n\t\tTrying: " << left_try << "\n\t\tEnter password: ";
-			for (int i = 0; i < password.size(); i++) std::cout << char(249);
-			
+			//for (int i = 0; i < password.size(); i++) std::cout << char(249);
+			std::cout << line(char(249), password.size());
 			key = _getch();
 
 			if (key == 13) break;
@@ -314,13 +293,16 @@ string* View::bildMenu() {
 
 	string *menu = new string[winSizeX];
 
-	for (unsigned int _ = 0; _ < menuSizeY + 2; _++) menu[0] += " ";
-	menu[0] += char(179);
+	menu[0] = line(' ', menuSizeY + 2) + char(179);
+
+	
 #ifdef DEBAGON
 	std::cout << "M sel:"<<isMenuActive << " M act:" << viewFocus << " M cur:" <<menuSelect <<   "\n";
 #endif
-	if (menuSelect < 0) menuSelect = menuCount - 1;
-	else if (menuSelect >= menuCount) menuSelect = 0;
+
+
+	menuSelect = limiter(menuSelect, menuCount);
+
 
 	for (int m = 0, i = 1; m < menuCount; m++, i += 3)
 	{		
@@ -379,61 +361,26 @@ string* View::bildMenu() {
 			CRR = char(179);
 			CR = char(179);
 		}
+		menu[i] += TL + line(hLine, menuSizeY) + TR + TRR;
 
-		menu[i] = TL;
-		for (unsigned int _ = 0; _ < menuSizeY; _++) menu[i] += hLine;
-		menu[i] += TR;
-		menu[i] += TRR;
-		
-		int strr = menuSizeY - menuItems[m].length();
-		menu[i + 1] = vLine;
-		for (int s = 0; s < strr + 1; s++) {
-			if (s == strr / 2) menu[i + 1] += menuItems[m];
-			else menu[i + 1] += " ";
-		}
-		menu[i + 1] += CR;
-		menu[i + 1] += CRR;
+		menu[i + 1] += vLine + title(menuItems[m], menuSizeY) + CR + CRR;
 
-		
-		menu[i + 2] = BL;
-		for (unsigned int _ = 0; _ < menuSizeY; _++) menu[i + 2] += hLine;
-		menu[i + 2] += BR;
-		menu[i + 2] += BRR;
-
+		menu[i + 2] += BL + line(hLine, menuSizeY) + BR + BRR;
 	}
 
-	for (int i = menuCount * 3 + 1; i < winSizeX; i++)
-	{
-		for (int s = 0; s < menuSizeY + 2; s++) menu[i] += " ";
-		menu[i] += char(179);;
+	for (int i = menuCount * 3 + 1; i < winSizeX; i++) {
+		menu[i] = line(' ', menuSizeY + 2) + char(179);
 	}
 
 	return menu;
 }
 
 string View::bildItem(Product product) {
-	const unsigned short int widthItem = viewSizeY - 6;
-	const unsigned short int widthID = widthItem * 10 / 100;
-	const unsigned short int widthTitle = widthItem * 40 / 100;
-	const unsigned short int widthPrice = widthItem * 25 / 100;
-	const unsigned short int widthRating = widthItem * 25 / 100;
-
-
-	string id = std::to_string(product.id);
-	string title = product.name;
-	string price = floatNormalize(product.price);
-	string rating = floatNormalize(product.rating);
-
-	id = adaptString(id, widthID);
-
-	title = adaptString(title, widthTitle);
-
-	price = adaptString(price, widthPrice);
-
-	rating = adaptString(rating, widthRating);
-
+	string str;
+	for (int i = 0; i < MINFILEDS; i++)
+		str += adaptString(product.getValue(i), widthFieldTitles[i]) + " ";
 	
-	return  " " + id + " " + title + " " + price + " " + rating + "  ";
+	return  str;
 }
 
 string* View::bildListItems() {
@@ -456,11 +403,10 @@ string* View::bildListItems() {
 		start += 1; magic = 2;
 	}
 
+	itemsSelect = limiter(itemsSelect, data->ids_size);
+
 	
 
-	if (itemsSelect < 0) itemsSelect = 0;// add ring ring
-	if (itemsSelect > data->ids_size - 1) itemsSelect = data->ids_size - 1;
-	
 	if (itemsSelect == winSizeX / 2 + offsetItems - magic) offsetItems++;
 	else if (itemsSelect == offsetItems && offsetItems != 0) offsetItems--;
 
@@ -469,7 +415,7 @@ string* View::bildListItems() {
 	{
 		if      (IIter == itemsSelect && !isMenuActive)     view[vIter] = topLine(viewSizeY);
 		else if (IIter == itemsSelect + 1 && !isMenuActive) view[vIter] = bottomLine(viewSizeY);
-		else for (int i = 0; i < viewSizeY; i++)            view[vIter] += " ";
+		else view[vIter] = line(' ', viewSizeY);
 		
 
 		if(IIter == itemsSelect && !isMenuActive)
@@ -484,30 +430,18 @@ string* View::bildListItems() {
 
 
 void View::topTitle(string* view, short start) {
-	const unsigned short int widthItem = viewSizeY - 2 ;
-	int widthFieldTitles[4] = {
-		widthItem * 10 / 100,
-		widthItem * 40 / 100,
-		widthItem * 25 / 100,
-		widthItem * 25 / 100
-	};
-	string filedTitle[4] = {
-		"ID",
-		"Title",
-		"Price",
-	};
-	if (sortConf.select > 2) sortConf.select = 2;
-	else if (sortConf.select < 0) sortConf.select = 0;
 
-	if (sortConf.selected != -1) filedTitle[sortConf.selected] += (sortConf.revers) ? " v" : " ^";
+	sortConf.select = limiter(sortConf.select, MINFILEDS);
+
+
+	if (sortConf.selected != -1) fieldNames[sortConf.selected] += (sortConf.revers) ? " v" : " ^";
 	
-	for (int i = 0; i < 4; i++) if(i != sortConf.selected) filedTitle[i] += "  ";
+	for (int i = 0; i < MINFILEDS; i++) if(i != sortConf.selected) fieldNames[i] += "  ";
 
 	
-	for (int i = 0; i < 4; i++) {
-
+	for (int i = 0; i < MINFILEDS; i++) {
 		if (!sortConf.active) {
-			view[start] += " " + adaptString(filedTitle[i], widthFieldTitles[i]);
+			view[start] += " " + adaptString(fieldNames[i], widthFieldTitles[i]);
 			continue;
 		}
 
@@ -515,24 +449,24 @@ void View::topTitle(string* view, short start) {
 		if (sortConf.select == i) {
 			view[start]     += char(218);
 			view[start + 1] += char(179);
-			view[start + 2] += char(192);
+			view[start + 2]	+= char(192);
 		} else if (sortConf.select == i - 1) {
-			view[start] += char(191);
+			view[start]     += char(191);
 			view[start + 1] += char(179);
 			view[start + 2] += char(217);
 		} else {
-			view[start] += " ";
+			view[start]     += " ";
 			view[start + 1] += " ";
 			view[start + 2] += " ";
 		}
 		
 		if (sortConf.select == i) {
 			view[start] += line(char(196), widthFieldTitles[i]);
-			view[start + 1] += adaptString(filedTitle[i], widthFieldTitles[i]);
+			view[start + 1] += adaptString(fieldNames[i], widthFieldTitles[i]);
 			view[start + 2] += line(char(196), widthFieldTitles[i]);;
 		} else {
 			view[start] += line(' ', widthFieldTitles[i]);
-			view[start + 1] += adaptString(filedTitle[i], widthFieldTitles[i]);
+			view[start + 1] += adaptString(fieldNames[i], widthFieldTitles[i]);
 			view[start + 2] += line(' ', widthFieldTitles[i]);;
 		}
 	}
@@ -540,13 +474,11 @@ void View::topTitle(string* view, short start) {
 
 void View::bildSearch(string* view) {
 
-
 	if (isSearchActive) {
 		view[0] = char(186);
 		view[0] += "   Search: " + editedField;
-		view[1] += char(200);
-		for (int i = 0; i < viewSizeY - 2; i++) view[1] += char(205);
-		view[1] += char(188);
+
+		view[1] = char(200) + line(char(205), viewSizeY) + char(188);
 	}
 	else {
 		

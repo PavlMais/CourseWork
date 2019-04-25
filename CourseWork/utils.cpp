@@ -44,12 +44,8 @@ void sorting(Product* prs, int const prsSize, SortConfing sortConf) {
 }
 
 
-//   int*
-
-
-
 std::string adaptString(std::string str, int size) {
-	if (str.size() > size) str = str.substr(0, size - 2) + "..";
+	if (str.size() > size) str = str.substr(0, size);
 	else  for (unsigned int i = str.size(); i < size; i++) str += " ";
 	return str;
 }
@@ -64,24 +60,13 @@ std::string line(char ch, int size) {
 int* searchByTitle(int* ids_items,int* ids_size, std::string str, Product* prds, int prsSize) {
 	
 	for (int i = 0; i < prsSize; i++) ids_items[i] = 1;
-
 	
-	std::locale loc;
-	
-	std::cout << str << "\n";
-	for (int i = 0; i < str.size(); i++)
-	{
-		str[i] = std::tolower(str[i], loc);
-	}
+	str = strLower(str);
 
-	std::cout << " > " << str << "\n";
-
-	Sleep(2000);
 	*ids_size = 0;
-	for (int i = 0,n = 0; i < prsSize; i++)
-	{
+	for (int i = 0,n = 0; i < prsSize; i++) {
 	
-		if (prds[i].name.find(str, 0) != std::string::npos) {
+		if (strLower(prds[i].name).find(str, 0) != std::string::npos) {
 			ids_items[n] = i;
 			n++;
 			*ids_size += 1;
@@ -89,5 +74,26 @@ int* searchByTitle(int* ids_items,int* ids_size, std::string str, Product* prds,
 	}
 		
 	return ids_items;
+}
+
+
+
+
+string strLower(string str) {
+	std::locale loc;
+
+	for (int i = 0; i < str.size(); i++)
+		str[i] = std::tolower(str[i], loc);
 	
+	return str;
+}
+
+
+
+
+int limiter(int var, int to, int from) {
+	if (var < from) var = from;
+	else if (var >= to) var = to - 1;
+
+	return var;
 }
