@@ -13,6 +13,8 @@ View::View(Data* pdata){
 	data = pdata;
 }
 
+
+
 void View::enter() {
 	if (isMenuActive) {
 		viewActive = menuActive = menuSelect;
@@ -44,6 +46,7 @@ void View::enter() {
 			else {
 				isfieldEdit = true;
 				editedField = data->products[itemsSelect].getValue(filedItemSelect);
+				filedCursorSelect = editedField.size();
 			}
 			break;
 
@@ -68,7 +71,21 @@ void View::enter() {
 }
 
 bool View::editField(int key){
-	if (key == 8) editedField = editedField.substr(0, editedField.size() - 1);
+	 if (key == 224) {
+		switch (_getch()) {
+		
+		case 77: filedCursorSelect++; break;
+		
+		case 75: filedCursorSelect--; break;
+		}
+
+		filedCursorSelect = limiter(filedCursorSelect, editedField.size());
+	}
+	 else if (key == 8) {
+		 editedField.erase(filedCursorSelect, 1);
+		 filedCursorSelect--;
+	 }
+
 	else if (key == 27) {
 	
 		switch (viewActive) {
@@ -99,7 +116,10 @@ bool View::editField(int key){
 		isfieldEdit = false;
 		return true;
 	}
-	else editedField += char(key);
+	else {
+		 editedField.insert(filedCursorSelect, 1, key);
+		 filedCursorSelect++;
+	 }
 
 	return false;
 }
@@ -174,37 +194,39 @@ void View::render() {
 }
 
 string* View::bildDetailItem(Product product) {
+	filedItemSelect = limiter(filedItemSelect, ALLFILEDS);
 
-	//FIELDS[5] = (viewActive == 2) ? "Back" : "Save";
 	string *view = new string[winSizeX];
 
 	view[0] = title("View", viewSizeY);
-
 	
-
+	string button = (viewActive == 2) ? "Back" : "Save";
 
 	for (int i = 5, n = 0; i < ALLFILEDS * 2 + 8; n++, i += 2)
 	{
+
 		if (filedItemSelect == n && !isMenuActive) view[i] = topLine(viewSizeY);
 		else if (filedItemSelect == n - 1 && !isMenuActive)  view[i] = bottomLine(viewSizeY);
 		else view[i] = "";
 		
 
 		if (n == ALLFILEDS - 1 && !isMenuActive) { // for button
-			if (filedItemSelect == n) view[i + 1] = "\t >Button";
-			else view[i + 1] = "\t Button";
+			if (filedItemSelect == n) view[i + 1] = "\t >" + button;
+			else view[i + 1] = "\t " + button;
 		}
 
-		else if (filedItemSelect == n && isfieldEdit) {
 
+		else if (filedItemSelect == n && isfieldEdit) {
 			i++;
 			view[i] = "\t Edit mode:";
 			view[i + 1] = "\t " + fieldNames[n] + ": " + editedField;
 			i++;
+			
+			view[i + 1] = "\t\t" + lineCorsor(filedCursorSelect, viewSizeY - 10, ' ');
 		}
 		else if (filedItemSelect == n && !isMenuActive) {
 
-			view[i + 1] = "\t " + fieldNames[n] + ": " + product.getValue(n);
+			view[i + 1] = "|\t " + fieldNames[n] + ": " + product.getValue(n);
 		}
 		else if (n < ALLFILEDS){
 			view[i + 1] = "\t " + fieldNames[n] + ": " + product.getValue(n);
@@ -261,7 +283,6 @@ bool View::login(){
 		while (true)
 		{
 			std::cout << "\n\t\tTrying: " << left_try << "\n\t\tEnter password: ";
-			//for (int i = 0; i < password.size(); i++) std::cout << char(249);
 			std::cout << line(char(249), password.size());
 			key = _getch();
 
@@ -430,18 +451,16 @@ string* View::bildListItems() {
 
 
 void View::topTitle(string* view, short start) {
-
 	sortConf.select = limiter(sortConf.select, MINFILEDS);
-
-
-	if (sortConf.selected != -1) fieldNames[sortConf.selected] += (sortConf.revers) ? " v" : " ^";
-	
-	for (int i = 0; i < MINFILEDS; i++) if(i != sortConf.selected) fieldNames[i] += "  ";
 
 	
 	for (int i = 0; i < MINFILEDS; i++) {
+		string field = fieldNames[i];
+		if(sortConf.selected == i) field += (sortConf.revers) ? "v " : "^ ";
+
+
 		if (!sortConf.active) {
-			view[start] += " " + adaptString(fieldNames[i], widthFieldTitles[i]);
+			view[start] += " " + adaptString(field, widthFieldTitles[i]);
 			continue;
 		}
 
@@ -459,14 +478,16 @@ void View::topTitle(string* view, short start) {
 			view[start + 1] += " ";
 			view[start + 2] += " ";
 		}
-		
+
+
+
 		if (sortConf.select == i) {
 			view[start] += line(char(196), widthFieldTitles[i]);
-			view[start + 1] += adaptString(fieldNames[i], widthFieldTitles[i]);
-			view[start + 2] += line(char(196), widthFieldTitles[i]);;
+			view[start + 1] += adaptString(field, widthFieldTitles[i]);
+			view[start + 2] += line(char(196), widthFieldTitles[i]);
 		} else {
 			view[start] += line(' ', widthFieldTitles[i]);
-			view[start + 1] += adaptString(fieldNames[i], widthFieldTitles[i]);
+			view[start + 1] += adaptString(field, widthFieldTitles[i]);
 			view[start + 2] += line(' ', widthFieldTitles[i]);;
 		}
 	}
@@ -477,8 +498,9 @@ void View::bildSearch(string* view) {
 	if (isSearchActive) {
 		view[0] = char(186);
 		view[0] += "   Search: " + editedField;
+		
+		view[1] = char(200) + lineCorsor(filedCursorSelect + 10, viewSizeY - 10, char(205));
 
-		view[1] = char(200) + line(char(205), viewSizeY) + char(188);
 	}
 	else {
 		
@@ -487,4 +509,6 @@ void View::bildSearch(string* view) {
 	}
 
 }
+
+
 

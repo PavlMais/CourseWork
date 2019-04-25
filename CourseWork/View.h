@@ -20,6 +20,7 @@ public:
 	int filterFiledSelect = 0;
 
 	int fieldSelect = 0;
+	int filedCursorSelect = 0;
 
 
 
@@ -27,6 +28,7 @@ public:
 	const static unsigned short	MINFILEDS = 4;
 
 	enum Field {ID, TITLE, PRICE, RATING, LEFTITEM, DESCRIPTION, BUTTON};
+
 	string fieldNames[ALLFILEDS] = {
 		"ID",
 		"Title",
@@ -35,15 +37,6 @@ public:
 	};
 	
 
-
-
-
-
-
-
-
-
-	
 	bool need_save = false;
 
 

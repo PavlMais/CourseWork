@@ -12,7 +12,9 @@ std::string floatNormalize(float fi) {
 	return std::to_string(fi).substr(0, std::to_string(fi).find(".") + 3);
 }
 
-
+string lineCorsor(int cursor, int size, char fill) {
+	return line(fill, cursor) + "^" + line(fill, size - cursor);
+}
 
 // --------- BAD ------------
 int sortBy;

@@ -1,6 +1,4 @@
 #pragma once
-
-
 #include <string>
 
 using std::string;
@@ -15,6 +13,7 @@ struct User {
 };
 
 struct Product {
+
 	int id;
 	string type;
 	string name;
@@ -41,21 +40,11 @@ struct Product {
 
 	void setValue(int key, string val) {
 		switch (key){
-		case TITLE: name = val;
-			break;
-		case PRICE: price = stoi(val);
-			break;
-		case RATING: rating = stoi(val);
-			break;
-		case LEFTITEM: left_item = stoi(val);
-			break;
-		case DESCRIPTION: description = val;
-			break;
-		default: 
-			system("cls");
-			std::cout << "Error key: " << key;
-			system("pause");
-			exit(1);
+			case TITLE: name = val; break;
+			case PRICE: price = stoi(val); break;
+			case RATING: rating = stoi(val); break;
+			case LEFTITEM: left_item = stoi(val); break;
+			case DESCRIPTION: description = val; break;
 		}
 	}
 
@@ -74,7 +63,6 @@ struct Product {
 struct Company {
 	int id;
 	string name;
-
 };
 
 struct SortConfing {
@@ -124,9 +112,6 @@ struct Data {
 		}
 		newProducts[productsSize] = new_product;
 
-		//products = (Product *)realloc(products, productsSize * sizeof(Product) + 1);
-		//products[productsSize] = new_product;
-		//productsSize += 1;
 
 		delete[] products;
 
@@ -135,3 +120,4 @@ struct Data {
 
 	}
 };
+
