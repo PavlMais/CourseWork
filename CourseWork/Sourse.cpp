@@ -9,7 +9,7 @@
 
 
 int main() {
-
+	system("mode con: cols=230 lines=30");
 	DataBase db;
 
 	View view(db.getData());
@@ -22,13 +22,14 @@ int main() {
 	int key;
 	while (true)
 	{
-		system("cls");
+		//system("cls");
 		view.render();
 		key = _getch();
 		
 		if (view.need_save) { 
 			db.save(); 
 			view.need_save = false; 
+			std::cout << "SAVED!!!!!!!";
 		}
 
 		if (view.isfieldEdit) {
@@ -47,6 +48,7 @@ int main() {
 		
 		}
 		else if (key == 102) {
+			
 
 			view.sortConf.active = false;
 			view.isSearch = true;

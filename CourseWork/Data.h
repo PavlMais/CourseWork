@@ -30,6 +30,7 @@ public:
 		switch (field) {
 		case Field::ID: return std::to_string(id);
 		case Field::TITLE: return name;
+		case Field::TYPE: return type;
 		case Field::PRICE: return floatNormalize(price);
 		case Field::RATING: return floatNormalize(rating);
 		case Field::LEFTITEM: return std::to_string(left_item);
@@ -42,6 +43,7 @@ public:
 		switch (key){
 			case ID: id = stoi(val); break;
 			case TITLE: name = val; break;
+			case TYPE: type = val; break;
 			case PRICE: price = stoi(val); break;
 			case RATING: rating = stoi(val); break;
 			case LEFTITEM: left_item = stoi(val); break;
@@ -114,67 +116,51 @@ struct Data {
 	void addProduct()
 	{
 		productsSize += 1;
-		ids_size += 1;
+		
+
 		Product *newProducts = new Product[productsSize];
 
 		for (int i = 0; i < productsSize - 1; i++)
-		{
 			newProducts[i] = products[i];
-		}
+		
+
 		newProducts[productsSize - 1] = new_product;
 
 		delete[] products;
 
 		products = newProducts;
-		newProducts = nullptr;
-		
-		ids_products = new int[ids_size]; // resize
+	
 
-		for (int i = 0; i < ids_size; i++)
-		{
-			ids_products[i] = i;
-		}
+		new_product = Product();
+
+		indexing();
 
 	}
 
 
-
-
+	void indexing() 
+	{
+		ids_size = productsSize;
+		ids_products = new int[ids_size];
+		for (int i = 0; i < ids_size; i++) ids_products[i] = i;
+	}
 
 
 	void delProduct(int index) {
 		std::cout << "\n\nIDSSIZE"<< ids_size;
+
+	
+		ids_size -= 1;
 		productsSize -= 1;
-		ids_size -= 5;
-		Product *newProducts = new Product[productsSize];
+	
 
-		std::cout <<"Index: "<< index<< "\n\n";
-		int iter = 0;
-
-		for (int i = 0; i < productsSize - 1; i++)
+		for (int i = index; i < productsSize; i++)
 		{
-			std::cout << "i: " << i << " iter: " << iter;
-			if (i == index) iter--;
-			else newProducts[i] = products[i];;
-			iter++;
-			
+			products[i] = products[i + 1];
 		}
 
 
-		products = newProducts;
-
-		delete [] newProducts;
-
-
-
-
-		ids_products = new int[ids_size]; // resize
-		std::cout << "\n\nIDSSIZE"<< ids_size;
-		for (int i = 0; i < ids_size; i++)
-		{
-			ids_products[i] = i;
-			std::cout << "\nids: " << i;
-		}
+		indexing();
 	}
 
 

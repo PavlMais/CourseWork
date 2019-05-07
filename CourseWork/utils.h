@@ -22,3 +22,4 @@ int limiter(int, int, int from = 0);
 string lineCorsor(int cursor, int size, char fill);
 
 bool checkProduct(Product pr);
+bool isDigit(string str);

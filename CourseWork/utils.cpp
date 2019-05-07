@@ -24,7 +24,6 @@ bool checkProduct(Product pr)
 		|| pr.description == ""
 		|| pr.rating == 0
 		|| pr.price == 0
-		|| pr.sale == 0
 		|| pr.left_item == 0
 		) return false;
 	else return true;
@@ -69,6 +68,7 @@ void sorting(int* ids_products, int ids_size, Product* prs, int const prsSize, S
 
 std::string adaptString(std::string str, int size) {
 	if (str.size() > size) str = str.substr(0, size);
+
 	else  for (unsigned int i = str.size(); i < size; i++) str += " ";
 	return str;
 }
@@ -114,9 +114,22 @@ string strLower(string str) {
 
 
 
-int limiter(int var, int to, int from) {
+int limiter(int var, int to, int from)
+{
 	if (var < from) var = from;
 	else if (var >= to) var = to - 1;
-
 	return var;
+}
+
+
+bool isDigit(string str) {
+	std::locale loc;
+	for (int i = 0; i < str.size(); i++)
+	{
+		if (!std::isdigit(str[i], loc)) return false;
+	}
+
+	return true;
+
+
 }

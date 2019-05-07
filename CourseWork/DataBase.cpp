@@ -28,6 +28,7 @@ Data* DataBase::getData(){
 	Data *dataN = new Data;
 	
 	getline(file, buffer);
+
 	dataN->usersSize = stoi(buffer);
 	dataN->users = new User[dataN->usersSize];
 
@@ -44,6 +45,7 @@ Data* DataBase::getData(){
 
 	getline(file, buffer);
 	dataN->productsSize = stoi(buffer);
+
 	dataN->products = new Product[dataN->productsSize];
 
 

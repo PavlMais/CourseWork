@@ -18,6 +18,8 @@ View::View(Data* pdata){
 
 void View::enter() {
 	if (isMenuActive) {
+		if (menuSelect == 4) exit(0);
+
 		viewActive = menuActive = menuSelect;
 		isMenuActive = false;
 	}
@@ -40,15 +42,14 @@ void View::enter() {
 		switch (viewActive) {
 		case LISTITEMS: viewActive = DETAILITEMS; break;
 		case DETAILITEMS:
-			if (filedItemSelect == 5){
+			if (filedItemSelect == BUTTON + 1){
 				viewActive = LISTITEMS;
 				need_save = true;
 			}
-			else if (filedItemSelect == 4) { // delete item
+			else if (filedItemSelect == BUTTON) { // delete item
 				viewActive = LISTITEMS;
 				data->delProduct(itemsSelect);
 				need_save = true;
-
 
 			}
 			else {
@@ -59,15 +60,14 @@ void View::enter() {
 			break;
 
 		case ADDITEMS:
-			if (filedItemSelect == 4) {
+			if (filedItemSelect == BUTTON) {
 
-				if (checkProduct(data->new_product)) {
-
+				if (checkProduct(data->new_product)) 
+				{
+					data->addProduct();
 					viewActive = menuActive = LISTITEMS;
 					need_save = true;
-					data->addProduct();
-				}
-				else {
+				} else {
 					message = "Not all fields!";
 				}
 
@@ -117,6 +117,15 @@ bool View::editField(int key){
 		isfieldEdit = false;
 	}
 	else if (key == 13) {
+
+		 if (viewActive != LISTITEMS && FieldIsNum[filedItemSelect] && ) {
+			 
+		 
+		 
+		 }
+
+
+
 		switch (viewActive) {
 			case LISTITEMS:
 				search = editedField;
@@ -125,9 +134,11 @@ bool View::editField(int key){
 				searchByTitle(data->ids_products, &data->ids_size, search, data->products, data->productsSize);
 
 				break;
+
 			case DETAILITEMS: 
 				data->products[itemsSelect].setValue(filedItemSelect, editedField);
 				break;
+
 			case ADDITEMS:
 				data->new_product.setValue(filedItemSelect, editedField);
 				break;
@@ -267,9 +278,9 @@ void View::render() {
 	string buffer;
 	for (int i = 0; i < winSizeX; i++) buffer += bMenu[i] + view[i] + helpView[i] + "\n";
 
-	#ifdef DEBAGON
-		system("cls");
-	#endif	
+	
+	system("cls");
+		
 
 	std::cout << buffer;
 }
@@ -294,13 +305,13 @@ string* View::bildDetailItem(Product product) {
 		
 
 		if (n == ALLFILEDS && viewActive == 2 || n == ALLFILEDS - 1 && viewActive == 1) { // for button
-			if (filedItemSelect == n && !isMenuActive) view[i + 1] = adaptString("|\t " + button, viewSizeY - 7) + "|";
-			else view[i + 1] = adaptString("\t " + button, viewSizeY - 7);
+			if (filedItemSelect == n && !isMenuActive) view[i + 1] = adaptString("|      " + button, viewSizeY - 1) + "|";
+			else view[i + 1] = adaptString("      " + button, viewSizeY);
 
 		}
 		else if (n == ALLFILEDS - 1 && viewActive == 2) {
-			if (filedItemSelect == n && !isMenuActive) view[i + 1] = adaptString("|\t Delete", viewSizeY - 7)+ "|";
-			else view[i + 1] = adaptString("\t Delete", viewSizeY - 7);
+			if (filedItemSelect == n && !isMenuActive) view[i + 1] = adaptString("|      Delete", viewSizeY - 1)+ "|";
+			else view[i + 1] = adaptString("      Delete", viewSizeY);
 
 		}
 
@@ -309,22 +320,22 @@ string* View::bildDetailItem(Product product) {
 
 			string isNum = (FieldIsNum[n]) ? "(Only numbers)" : "";
 
-			view[i] = "|\t " + adaptString("Edit mode: "+ isNum, viewSizeY - 10)+ "|";
+			view[i] = adaptString("|   Edit mode: " + isNum, viewSizeY - 1)+ "|";
 		
 
-			view[i + 1] = "|\t " + adaptString(fieldNames[n] + ": " + editedField, viewSizeY - 10) + "|";
+			view[i + 1] = adaptString("|     " + fieldNames[n] + ": " + editedField, viewSizeY - 1) + "|";
 
 
 			i++;
 			
-			view[i + 1] = "|\t" +line(' ', fieldNames[n].size() + 3)+ lineCorsor(filedCursorSelect, viewSizeY - 19, ' ') + "|";
+			view[i + 1] = "|     " + line(' ', fieldNames[n].size() + 3) + lineCorsor(filedCursorSelect, viewSizeY - 14, ' ') + "|";
 		}
 		else if (filedItemSelect == n && !isMenuActive) {
 
-			view[i + 1] = "|\t " + adaptString(fieldNames[n] + ": " + product.getValue(n), viewSizeY - 10) + "|";
+			view[i + 1] =  adaptString("|      " + fieldNames[n] + ": " + product.getValue(n), viewSizeY - 1) + "|";
 		}
 		else if (n < ALLFILEDS){
-			view[i + 1] = "\t " + adaptString(fieldNames[n] + ": " + product.getValue(n), viewSizeY - 9);
+			view[i + 1] = adaptString("      " + fieldNames[n] + ": " + product.getValue(n), viewSizeY);
 		}
 	}
 	return view;
@@ -540,7 +551,28 @@ string* View::bildListItems() {
 			view[vIter + 1] = " "+ bildItem(data->products[data->ids_products[IIter]]) + " ";
 
 	}
+
 	if (itemsSelect == data->ids_size - 1 && !isMenuActive) view[vIter] = bottomLine(viewSizeY);
+	else view[vIter] = line(' ', viewSizeY);
+
+
+	if (data->ids_size == 0) {
+
+		for (int i = start; i < winSizeX; i++)
+		{
+			view[i] = line(' ', viewSizeY);
+			if (i == winSizeX / 2) view[i] = title("Not found", viewSizeY);
+
+		}
+
+
+	}
+	else 
+	{
+		for (int i = vIter + 1; i < winSizeX; i++)
+			view[i] = line(' ', viewSizeY);
+	}
+
 	return view;
 }
 
@@ -606,15 +638,13 @@ void View::topTitle(string* view, short start) {
 void View::bildSearch(string* view) {
 
 	if (isSearchActive) {
-		view[0] = char(186);
-		view[0] += "   Search: " + adaptString(editedField, viewSizeY - 10);
+		view[0] = adaptString("|  Search: " + editedField, viewSizeY);
 		
-		view[1] = char(200) + lineCorsor(filedCursorSelect + 10, viewSizeY - 10, char(205));
+		view[1] = char(200) + lineCorsor(filedCursorSelect + 10, viewSizeY, char(205));
 
 	}
 	else {
-		
-		view[0] += "   Search: " + adaptString(search, viewSizeY - 15);
+		view[0] = adaptString("|  Search: " + search, viewSizeY);
 
 		view[1] = bottomLine(viewSizeY);
 	}
