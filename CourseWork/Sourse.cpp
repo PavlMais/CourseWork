@@ -22,6 +22,7 @@ int main() {
 	int key;
 	while (true)
 	{
+		system("cls");
 		view.render();
 		key = _getch();
 		
@@ -38,8 +39,10 @@ int main() {
 		
 		if (key == 115) {
 			if (view.sortConf.active) 
-				sorting(view.data->products, view.data->productsSize, view.sortConf);
-
+				sorting(view.data->ids_products, view.data->ids_size,  view.data->products, view.data->productsSize, view.sortConf);
+				
+ 
+				
 			view.sortConf.active = !view.sortConf.active;
 		
 		}

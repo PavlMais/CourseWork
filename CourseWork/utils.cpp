@@ -13,37 +13,58 @@ std::string floatNormalize(float fi) {
 }
 
 string lineCorsor(int cursor, int size, char fill) {
-	return line(fill, cursor) + "^" + line(fill, size - cursor);
+	return line(fill, cursor) + char(223) + line(fill, size - cursor);
+}
+
+bool checkProduct(Product pr)
+{
+	if (pr.id == 0
+		|| pr.name == ""
+		|| pr.type == ""
+		|| pr.description == ""
+		|| pr.rating == 0
+		|| pr.price == 0
+		|| pr.sale == 0
+		|| pr.left_item == 0
+		) return false;
+	else return true;
 }
 
 // --------- BAD ------------
 int sortBy;
 bool sortRevers;
+Product*  prds;
 
-bool SortBy(Product const f, Product const s) {
+bool SortBy(int const f, int const s) {
 	
 	if (sortRevers) {
 		switch (sortBy) {
-		case 0: return f.id < s.id;
-		case 1: return strcmp(f.name.c_str(), s.name.c_str()) > 0;
-		case 2: return f.price < s.price;
+		case 0: return prds[f].id < prds[s].id;
+		case 1: return strcmp(prds[f].name.c_str(), prds[f].name.c_str()) > 0;
+		case 2: return prds[f].price < prds[f].price;
 		default: return false;
 		}
 	} else {
 		switch (sortBy) {
-		case 0: return f.id > s.id;
-		case 1: return strcmp(f.name.c_str(), s.name.c_str()) < 0;
-		case 2: return f.price > s.price;
+		case 0: return prds[f].id > prds[s].id;
+		case 1: return strcmp(prds[f].name.c_str(), prds[f].name.c_str()) < 0;
+		case 2: return prds[f].price > prds[f].price;
 		default: return false;
 		}
 	}
 }
 
-void sorting(Product* prs, int const prsSize, SortConfing sortConf) {
+void sorting(int* ids_products, int ids_size, Product* prs, int const prsSize, SortConfing sortConf) {
 	sortBy = sortConf.selected;
 	sortRevers = sortConf.revers;
-	std::sort(prs, prs + prsSize, SortBy); 
+	prds = prs;
+
+	std::sort(ids_products, ids_products + ids_size, SortBy);
 }
+
+
+
+
 
 
 std::string adaptString(std::string str, int size) {

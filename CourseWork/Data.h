@@ -13,25 +13,25 @@ struct User {
 };
 
 struct Product {
+public:
 
-	int id;
-	string type;
-	string name;
+	int id = 0;
+	string type = "";
+	string name = "";
 	float price = 0;
 	int sale = 0;
 	int left_item = 0;
 	float rating = 0;
-	string description;
-	int id_company;
+	string description = "";
+	int id_company = 0;
 
-	enum Field {ID, TITLE, PRICE, RATING, LEFTITEM, DESCRIPTION};
 
 	string getValue(int field) {
 		switch (field) {
 		case Field::ID: return std::to_string(id);
 		case Field::TITLE: return name;
-		case Field::PRICE: return std::to_string(price);
-		case Field::RATING: return std::to_string(rating);
+		case Field::PRICE: return floatNormalize(price);
+		case Field::RATING: return floatNormalize(rating);
 		case Field::LEFTITEM: return std::to_string(left_item);
 		case Field::DESCRIPTION: return description;
 		default: return " ";
@@ -40,6 +40,7 @@ struct Product {
 
 	void setValue(int key, string val) {
 		switch (key){
+			case ID: id = stoi(val); break;
 			case TITLE: name = val; break;
 			case PRICE: price = stoi(val); break;
 			case RATING: rating = stoi(val); break;
@@ -59,6 +60,14 @@ struct Product {
         str += std::to_string(id_company) + "[c]";
         return str;
     }
+private:
+	string floatNormalize(float fi) {
+		return std::to_string(fi).substr(0, std::to_string(fi).find(".") + 3);
+	}
+
+	
+	enum Field { ID, TITLE, TYPE, PRICE, RATING, LEFTITEM, DESCRIPTION, BUTTON };
+
 };
 struct Company {
 	int id;
@@ -104,20 +113,69 @@ struct Data {
 
 	void addProduct()
 	{
+		productsSize += 1;
+		ids_size += 1;
 		Product *newProducts = new Product[productsSize];
 
-		for (int i = 0; i < productsSize; i++)
+		for (int i = 0; i < productsSize - 1; i++)
 		{
 			newProducts[i] = products[i];
 		}
-		newProducts[productsSize] = new_product;
-
+		newProducts[productsSize - 1] = new_product;
 
 		delete[] products;
 
 		products = newProducts;
 		newProducts = nullptr;
+		
+		ids_products = new int[ids_size]; // resize
+
+		for (int i = 0; i < ids_size; i++)
+		{
+			ids_products[i] = i;
+		}
 
 	}
-};
 
+
+
+
+
+
+	void delProduct(int index) {
+		std::cout << "\n\nIDSSIZE"<< ids_size;
+		productsSize -= 1;
+		ids_size -= 5;
+		Product *newProducts = new Product[productsSize];
+
+		std::cout <<"Index: "<< index<< "\n\n";
+		int iter = 0;
+
+		for (int i = 0; i < productsSize - 1; i++)
+		{
+			std::cout << "i: " << i << " iter: " << iter;
+			if (i == index) iter--;
+			else newProducts[i] = products[i];;
+			iter++;
+			
+		}
+
+
+		products = newProducts;
+
+		delete [] newProducts;
+
+
+
+
+		ids_products = new int[ids_size]; // resize
+		std::cout << "\n\nIDSSIZE"<< ids_size;
+		for (int i = 0; i < ids_size; i++)
+		{
+			ids_products[i] = i;
+			std::cout << "\nids: " << i;
+		}
+	}
+
+
+};

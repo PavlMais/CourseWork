@@ -7,7 +7,7 @@ std::string floatNormalize(float);
 
 
 
-void sorting(Product* prs, int prsSize, SortConfing sortConf);
+void sorting(int* ids_products, int ids_size, Product* prs, int prsSize, SortConfing sortConf);
 
 std::string adaptString(std::string, int);
 
@@ -20,3 +20,5 @@ string strLower(string str);
 int limiter(int, int, int from = 0);
 
 string lineCorsor(int cursor, int size, char fill);
+
+bool checkProduct(Product pr);

@@ -24,16 +24,19 @@ public:
 
 
 
-	const static unsigned short	ALLFILEDS = 5;
+	const static unsigned short	ALLFILEDS = 8;
 	const static unsigned short	MINFILEDS = 4;
 
-	enum Field {ID, TITLE, PRICE, RATING, LEFTITEM, DESCRIPTION, BUTTON};
-
+	enum Field {ID, TITLE,TYPE, PRICE, RATING, LEFTITEM, DESCRIPTION, BUTTON};
+	bool FieldIsNum[ALLFILEDS] = { 1, 0, 1, 1, 1, 0 };
 	string fieldNames[ALLFILEDS] = {
 		"ID",
 		"Title",
+		"Type",
 		"Price",
-		"Rating"
+		"Rating",
+		"Left items",
+		"Description"
 	};
 	
 
@@ -86,7 +89,7 @@ private:
 
 	User activeUser;
 
-	const unsigned int winSizeX = 20;
+	const unsigned int winSizeX = 25;
 	const unsigned int winSizeY = 105;
 	const unsigned int menuSizeY = winSizeY * 20 / 100;
 	const unsigned int viewSizeY = winSizeY * 50 / 100;
@@ -94,15 +97,15 @@ private:
 
 	unsigned int widthFieldTitles[ALLFILEDS] = {
 		widthItem * 7 / 100,
-		widthItem * 43 / 100,
-		widthItem * 25 / 100,
+		widthItem * 40 / 100,
+		widthItem * 23 / 100,
 		widthItem * 25 / 100
 	};
 
 	static const unsigned short int menuCount = 5;
 	string menuItems[menuCount] = { "View", "Add", "Search", "Setting", "Quit" };
 
-
+	string message = "";
 	string* bildMenu();
 
 	string* bildAdd();
@@ -114,6 +117,7 @@ private:
 	string getFilterField(int key);
 
 	string* bildDetailItem(Product);
+	string* bildHelp();
 
 	string bildItem(Product);
 

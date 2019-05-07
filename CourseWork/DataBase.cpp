@@ -20,7 +20,7 @@ Data* DataBase::getData(){
 	if (!file.good()) {
 		std::cout << "File not exist\nCreate file..";
 		std::ofstream file(PATH_DB);
-		file << "0\nanonim[l]password[p]0[g]\n0" << std::endl;
+		file << "1\nanonim[l]password[p]0[g]\n0" << std::endl;
 	}
 
 	string buffer;
