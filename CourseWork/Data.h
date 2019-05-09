@@ -18,10 +18,10 @@ public:
 	int id = 0;
 	string type = "";
 	string name = "";
-	float price = 0;
+	int price = 0;
 	int sale = 0;
 	int left_item = 0;
-	float rating = 0;
+	int rating = 0;
 	string description = "";
 	int id_company = 0;
 
@@ -31,8 +31,8 @@ public:
 		case Field::ID: return std::to_string(id);
 		case Field::TITLE: return name;
 		case Field::TYPE: return type;
-		case Field::PRICE: return floatNormalize(price);
-		case Field::RATING: return floatNormalize(rating);
+		case Field::PRICE: return std::to_string(price);
+		case Field::RATING: return std::to_string(rating);
 		case Field::LEFTITEM: return std::to_string(left_item);
 		case Field::DESCRIPTION: return description;
 		default: return " ";
@@ -63,11 +63,6 @@ public:
         return str;
     }
 private:
-	string floatNormalize(float fi) {
-		return std::to_string(fi).substr(0, std::to_string(fi).find(".") + 3);
-	}
-
-	
 	enum Field { ID, TITLE, TYPE, PRICE, RATING, LEFTITEM, DESCRIPTION, BUTTON };
 
 };

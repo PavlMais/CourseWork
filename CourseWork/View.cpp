@@ -118,11 +118,13 @@ bool View::editField(int key){
 	}
 	else if (key == 13) {
 
-		 if (viewActive != LISTITEMS && FieldIsNum[filedItemSelect] && ) {
-			 
-		 
-		 
+		 if (viewActive != LISTITEMS && FieldIsNum[filedItemSelect] && ! isDigit(editedField)) {
+			 error_msg_type = "(Only numbers)";
+			 return false;
 		 }
+
+		 if (FieldIsNum[filedItemSelect] && editedField == "") editedField = "0";
+
 
 
 
@@ -318,9 +320,9 @@ string* View::bildDetailItem(Product product) {
 		else if (filedItemSelect == n && isfieldEdit) {
 			i++;
 
-			string isNum = (FieldIsNum[n]) ? "(Only numbers)" : "";
+			
 
-			view[i] = adaptString("|   Edit mode: " + isNum, viewSizeY - 1)+ "|";
+			view[i] = adaptString("|   Edit mode: " + error_msg_type, viewSizeY - 1)+ "|";
 		
 
 			view[i + 1] = adaptString("|     " + fieldNames[n] + ": " + editedField, viewSizeY - 1) + "|";

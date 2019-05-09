@@ -90,7 +90,7 @@ private:
 	User activeUser;
 
 	const unsigned int winSizeX = 26;
-	const unsigned int winSizeY = 217;
+	const unsigned int winSizeY = 180;
 	const unsigned int menuSizeY = winSizeY * 15 / 100;
 	const unsigned int viewSizeY = winSizeY * 75 / 100;
 
@@ -98,7 +98,7 @@ private:
 
 	unsigned int widthFieldTitles[ALLFILEDS] = {
 		widthItem * 4 / 100,
-		widthItem * 31 / 100,
+		widthItem * 32 / 100,
 		widthItem * 10 / 100,
 		widthItem * 15 / 100,
 		widthItem * 20 / 100,
@@ -108,7 +108,7 @@ private:
 	static const unsigned short int menuCount = 5;
 	string menuItems[menuCount] = { "View", "Add", "Search", "Setting", "Quit" };
 
-	string message = "";
+	string message, error_msg_type;
 	string* bildMenu();
 
 	string* bildAdd();

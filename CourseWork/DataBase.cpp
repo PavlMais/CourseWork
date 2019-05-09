@@ -15,13 +15,19 @@ void DataBase::save(){
 
 Data* DataBase::getData(){
 
-	std::ifstream file(PATH_DB);
+	std::ifstream chfile(PATH_DB);
 
-	if (!file.good()) {
-		std::cout << "File not exist\nCreate file..";
-		std::ofstream file(PATH_DB);
-		file << "1\nanonim[l]password[p]0[g]\n0" << std::endl;
+	if (!chfile.good()) {
+		chfile.close();
+		std::cout << "File not exist\n\n\n\t\tPLEASE REOPEN APP";
+		std::ofstream nfile(PATH_DB);
+		nfile << "1\nanonim[l]password[p]0[g]\n0" << std::endl;
+		nfile.close();
+		
+
 	}
+
+	std::ifstream file(PATH_DB);
 
 	string buffer;
 

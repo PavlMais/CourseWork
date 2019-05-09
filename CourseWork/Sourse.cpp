@@ -9,7 +9,7 @@
 
 
 int main() {
-	system("mode con: cols=230 lines=30");
+	system("mode con: cols=190 lines=30");
 	DataBase db;
 
 	View view(db.getData());
