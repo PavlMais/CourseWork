@@ -1,0 +1,12 @@
+2
+pavlo[l]password[p]0[g]
+root[l]root[p]0[g]
+8
+1[i]Smarphone[t]Oppo ride[n]10500[p]0[s]54[l]7[r]Large description for phone[d]0[c]
+2[i]Laptop[t]Asus AirBook 12[n]32000[p]0[s]23[l]9[r]Ultra laptop description[d]0[c]
+4[i]Smartphone[t]Redmi Note 9 Pro[n]5436[p]0[s]12[l]10[r]Phone[d]0[c]
+33[i]Laptop[t]Acer Swift 1 SF[n]12500[p]0[s]125[l]11[r]BLA BLA BLA BBLLLA car[d]0[c]
+321[i]SmartPhone[t]Samsung Galaxy M20 4/64GB[n]8990[p]0[s]543[l]6[r]None[d]0[c]
+23[i]Smartphone[t]Huawei P smart+ Black +[n]43556[p]0[s]5345[l]11[r]i busy[d]0[c]
+435[i]Smarthpone[t]Huawei P30 6/128GB Aurora[n]54545[p]0[s]2[l]10[r]i'm very busy[d]0[c]
+54[i]test[t]title[n]5435[p]0[s]43[l]2[r]tewst[d]0[c]
