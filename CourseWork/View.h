@@ -90,7 +90,7 @@ private:
 	User activeUser;
 
 	const unsigned int winSizeX = 26;
-	const unsigned int winSizeY = 180;
+	const unsigned int winSizeY = 120;
 	const unsigned int menuSizeY = winSizeY * 15 / 100;
 	const unsigned int viewSizeY = winSizeY * 75 / 100;
 
@@ -101,7 +101,7 @@ private:
 		widthItem * 32 / 100,
 		widthItem * 10 / 100,
 		widthItem * 15 / 100,
-		widthItem * 20 / 100,
+		widthItem * 19 / 100,
 		widthItem * 17 / 100
 	};
 

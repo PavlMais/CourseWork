@@ -39,15 +39,19 @@ bool SortBy(int const f, int const s) {
 	if (sortRevers) {
 		switch (sortBy) {
 		case 0: return prds[f].id < prds[s].id;
-		case 1: return strcmp(prds[f].name.c_str(), prds[f].name.c_str()) > 0;
-		case 2: return prds[f].price < prds[f].price;
+		case 1: return strcmp(prds[f].name.c_str(), prds[s].name.c_str()) > 0;
+		case 3: return prds[f].price < prds[s].price;
+		case 4: return prds[f].rating < prds[s].rating;
+		case 5: return prds[f].left_item < prds[s].left_item;
 		default: return false;
 		}
 	} else {
 		switch (sortBy) {
 		case 0: return prds[f].id > prds[s].id;
-		case 1: return strcmp(prds[f].name.c_str(), prds[f].name.c_str()) < 0;
-		case 2: return prds[f].price > prds[f].price;
+		case 1: return strcmp(prds[f].name.c_str(), prds[s].name.c_str()) < 0;
+		case 3: return prds[f].price > prds[s].price;
+		case 4: return prds[f].rating > prds[s].rating;
+		case 5: return prds[f].left_item > prds[s].left_item;
 		default: return false;
 		}
 	}
