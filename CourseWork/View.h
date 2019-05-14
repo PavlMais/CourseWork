@@ -11,10 +11,31 @@ class View
 {
 public:
 	View(Data* data);
-	string editedField = "";
+	SortConfing sortConf;
 
-
+	bool need_save = false;
 	bool isfieldEdit = false;
+	bool isSearch = false;
+	bool isSearchActive = false;
+	string editedField = "";
+	string search = "";
+	Data* data;
+
+
+	void render();
+	void enter();
+
+	void cursorUp();
+	void cursorDown();
+	void cursorLeft();
+	void cursorRight();
+
+	bool editField(int key);
+
+	bool login();
+
+private:
+
 
 	int filedItemSelect = 0;
 	int filterFiledSelect = 0;
@@ -40,7 +61,6 @@ public:
 	};
 	
 
-	bool need_save = false;
 
 
 
@@ -54,38 +74,8 @@ public:
 	int menuSelect = 0;
 	int menuActive = 0;
 
-	
-
-	SortConfing sortConf;
-
-	string search = "";
-	bool isSearch = false;
-	bool isSearchActive = false;
-
 
 	int itemsSelect = 0;
-
-	
-	void cursorUp();
-	void cursorDown();
-	void cursorLeft();
-	void cursorRight();
-
-	void enter();
-	bool editField(int key);
-
-	void render();
-
-	bool login();
-	
-
-		
-	Data* data;
-	
-
-
-private:
-
 
 	User activeUser;
 
@@ -105,19 +95,16 @@ private:
 		widthItem * 17 / 100
 	};
 
-	static const unsigned short int menuCount = 5;
-	string menuItems[menuCount] = { "View", "Add", "Search", "Setting", "Quit" };
+	static const unsigned short int menuCount = 3;
+	string menuItems[menuCount] = { "View", "Add", "Quit" };
 
 	string message, error_msg_type;
 	string* bildMenu();
 
-	string* bildAdd();
 	void bildSearch(string*);
 	string* bildListItems();
 	void topTitle(string * arr, short select);
-	void bildSearch(string * view, int start);
 
-	string getFilterField(int key);
 
 	string* bildDetailItem(Product);
 	string* bildHelp();
@@ -129,8 +116,7 @@ private:
 	string topLine(int);
 	string bottomLine(int);
 
-	
-	
+
 };
 
 

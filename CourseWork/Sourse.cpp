@@ -6,23 +6,19 @@
 #include "utils.h"
 
 
-
-
 int main() {
 	system("mode con: cols=190 lines=30");
 	DataBase db;
 
 	View view(db.getData());
 
-	//if (!view.login()) return 0; 
-
-
+	if (!view.login()) return 0; 
 
 
 	int key;
 	while (true)
 	{
-		//system("cls");
+		
 		view.render();
 		key = _getch();
 		

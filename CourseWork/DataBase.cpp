@@ -11,8 +11,6 @@ void DataBase::save(){
 
 }
 
-
-
 Data* DataBase::getData(){
 
 	std::ifstream chfile(PATH_DB);
@@ -44,23 +42,14 @@ Data* DataBase::getData(){
 	}
 
 
-
-
-
-
-
 	getline(file, buffer);
 	dataN->productsSize = stoi(buffer);
 
 	dataN->products = new Product[dataN->productsSize];
 
-
-
 	for (int i = 0; getline(file, buffer); i++){
 		dataN->products[i] = parse_product(buffer);
 	}
-
-
 
 
 	dataN->ids_size = dataN->productsSize;
@@ -76,11 +65,6 @@ Data* DataBase::getData(){
 	data = dataN;
 	return dataN;
 }
-
-
-
-
-
 
 User DataBase::parse_user(string data) {
 	int indx1 = data.find("[l]") + 3;

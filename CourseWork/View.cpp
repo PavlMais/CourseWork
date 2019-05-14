@@ -18,7 +18,7 @@ View::View(Data* pdata){
 
 void View::enter() {
 	if (isMenuActive) {
-		if (menuSelect == 4) exit(0);
+		if (menuSelect == 2) exit(0);
 
 		viewActive = menuActive = menuSelect;
 		isMenuActive = false;
@@ -240,36 +240,17 @@ string* View::bildHelp() {
 			index += 2;
 		}
 	}
-
-
-
-
-	
-
 	return view;
 }
 
 void View::render() {
-
-
 	string* bMenu = bildMenu();
-
 	string* view = nullptr;
-
 	string* helpView = bildHelp();
 
-		//system("cls");// Move to bottom
-	#ifdef DEBAGON
-		std::cout << "Menu size: " << menuSizeY << "  View size: " << viewSizeY << "  Sub view size: " << subViewSizeY;
-	
-		std::cout << "Menu active: " << isMenuActive << " ViewActive: " << viewActive << "\n";
-	
-	#endif
-
-	
 	switch (viewActive) {
-		case LISTITEMS: view = bildListItems(); break;
-		case ADDITEMS: view = bildDetailItem(data->new_product); break;
+		case LISTITEMS:   view = bildListItems(); break;
+		case ADDITEMS:    view = bildDetailItem(data->new_product); break;
 		case DETAILITEMS: view = bildDetailItem(data->products[itemsSelect]); break;
 		default:
 			std::cout << "Menu not found:/\n\n";
@@ -282,8 +263,7 @@ void View::render() {
 
 	
 	system("cls");
-		
-
+	
 	std::cout << buffer;
 }
 
@@ -320,16 +300,10 @@ string* View::bildDetailItem(Product product) {
 		else if (filedItemSelect == n && isfieldEdit) {
 			i++;
 
-			
-
 			view[i] = adaptString("|   Edit mode: " + error_msg_type, viewSizeY - 1)+ "|";
-		
 
 			view[i + 1] = adaptString("|     " + fieldNames[n] + ": " + editedField, viewSizeY - 1) + "|";
-
-
 			i++;
-			
 			view[i + 1] = "|     " + line(' ', fieldNames[n].size() + 3) + lineCorsor(filedCursorSelect, viewSizeY - 14, ' ') + "|";
 		}
 		else if (filedItemSelect == n && !isMenuActive) {
@@ -349,17 +323,18 @@ string View::title(string title, int size) {
 
 	return line(' ', sl / 2) + title + line(' ', size / 2);
 }
+
 string View::topLine(int size)
 {
 	return char(218) + line(char(196), size - 2) + char(191);
 }
+
 string View::bottomLine(int size)
 {
 	return char(192) + line(char(196), size - 2) + char(217);	
 }
 
 bool View::login(){
-	
 	string login, password;
 	bool users_exists = false;
 	User check_user;
@@ -423,12 +398,6 @@ string* View::bildMenu() {
 	string *menu = new string[winSizeX];
 
 	menu[0] = line(' ', menuSizeY + 2) + char(179);
-
-	
-#ifdef DEBAGON
-	std::cout << "M sel:"<<isMenuActive << " M act:" << viewFocus << " M cur:" <<menuSelect <<   "\n";
-#endif
-
 
 	menuSelect = limiter(menuSelect, menuCount);
 
@@ -534,8 +503,6 @@ string* View::bildListItems() {
 
 	itemsSelect = limiter(itemsSelect, data->ids_size);
 
-	
-
 	if (itemsSelect == winSizeX / 2 + offsetItems - magic) offsetItems++;
 	else if (itemsSelect == offsetItems && offsetItems != 0) offsetItems--;
 
@@ -560,17 +527,12 @@ string* View::bildListItems() {
 
 	if (data->ids_size == 0) {
 
-		for (int i = start; i < winSizeX; i++)
-		{
+		for (int i = start; i < winSizeX; i++) {
 			view[i] = line(' ', viewSizeY);
 			if (i == winSizeX / 2) view[i] = title("Not found", viewSizeY);
 
 		}
-
-
-	}
-	else 
-	{
+	} else {
 		for (int i = vIter + 1; i < winSizeX; i++)
 			view[i] = line(' ', viewSizeY);
 	}
@@ -582,11 +544,9 @@ string* View::bildListItems() {
 void View::topTitle(string* view, short start) {
 	sortConf.select = limiter(sortConf.select, MINFILEDS);
 
-	
 	for (int i = 0; i < MINFILEDS; i++) {
 		string field = fieldNames[i];
 		if(sortConf.selected == i) field += (sortConf.revers) ? "v " : "^ ";
-
 
 		if (!sortConf.active) {
 			view[start] += " " + adaptString(field, widthFieldTitles[i]);
@@ -607,9 +567,6 @@ void View::topTitle(string* view, short start) {
 			view[start + 1] += " ";
 			view[start + 2] += " ";
 		}
-
-
-
 
 
 		if (sortConf.select == i) {
@@ -638,19 +595,16 @@ void View::topTitle(string* view, short start) {
 }
 
 void View::bildSearch(string* view) {
-
 	if (isSearchActive) {
 		view[0] = adaptString("|  Search: " + editedField, viewSizeY);
 		
 		view[1] = char(200) + lineCorsor(filedCursorSelect + 10, viewSizeY, char(205));
 
-	}
-	else {
+	} else {
 		view[0] = adaptString("|  Search: " + search, viewSizeY);
 
 		view[1] = bottomLine(viewSizeY);
 	}
-
 }
 
 
